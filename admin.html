@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>欣寧身心診所 — 後台管理</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Microsoft JhengHei','PingFang TC',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+a{text-decoration:none;color:inherit}
+/* ── LOGIN ── */
+#page-login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 100%)}
+.login-card{background:#1e293b;border-radius:20px;padding:48px 40px;width:380px;box-shadow:0 20px 60px rgba(0,0,0,.5);border:1px solid #334155}
+.login-logo{text-align:center;margin-bottom:32px}
+.login-logo h1{font-size:1.4rem;color:#fff;letter-spacing:.06em;margin-bottom:6px}
+.login-logo p{font-size:.82rem;color:#94a3b8}
+.login-logo .badge{display:inline-block;background:#B8850A;color:#fff;font-size:.72rem;padding:3px 10px;border-radius:20px;margin-top:8px}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:6px;font-weight:600;letter-spacing:.05em}
+.form-group input{width:100%;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:11px 14px;color:#e2e8f0;font-size:.92rem;transition:border-color .2s}
+.form-group input:focus{outline:none;border-color:#3b82f6}
+.btn-login{width:100%;background:#1B3A6B;border:none;color:#fff;padding:13px;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:8px;transition:background .2s}
+.btn-login:hover{background:#2563eb}
+.login-error{color:#f87171;font-size:.82rem;margin-top:10px;text-align:center;min-height:20px}
+/* ── ADMIN LAYOUT ── */
+#page-admin{display:flex;min-height:100vh}
+.sidebar{width:240px;background:#1e293b;display:flex;flex-direction:column;flex-shrink:0;border-right:1px solid #334155}
+.sb-logo{padding:24px 20px;border-bottom:1px solid #334155}
+.sb-logo h2{font-size:1.05rem;color:#fff;font-weight:700;letter-spacing:.04em}
+.sb-logo p{font-size:.72rem;color:#64748b;margin-top:3px}
+.sb-logo .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;margin-right:5px}
+.sb-nav{flex:1;padding:12px 0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:.88rem;color:#94a3b8;cursor:pointer;border-left:3px solid transparent;transition:all .15s}
+.nav-item:hover{background:#334155;color:#e2e8f0}
+.nav-item.active{background:#1e3a5f;color:#60a5fa;border-left-color:#3b82f6;font-weight:600}
+.nav-item .icon{font-size:1rem;width:20px;text-align:center}
+.sb-footer{padding:16px 20px;border-top:1px solid #334155;display:flex;flex-direction:column;gap:8px}
+.sb-link{display:flex;align-items:center;gap:8px;font-size:.8rem;color:#64748b;padding:6px 0;cursor:pointer;transition:color .2s}
+.sb-link:hover{color:#e2e8f0}
+.btn-logout{background:#7f1d1d;border:none;color:#fca5a5;padding:8px 12px;border-radius:6px;font-size:.8rem;cursor:pointer;transition:background .2s;width:100%;font-family:inherit}
+.btn-logout:hover{background:#991b1b}
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.top-bar{background:#1e293b;border-bottom:1px solid #334155;padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.top-bar h1{font-size:1.15rem;font-weight:700;color:#fff}
+.top-bar .user-info{font-size:.8rem;color:#64748b}
+.content-area{flex:1;overflow-y:auto;padding:28px}
+/* ── TOOLBAR ── */
+.toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.toolbar-title{font-size:1rem;color:#94a3b8}
+.toolbar-title strong{color:#fff}
+.btn-add{background:#1B3A6B;border:none;color:#fff;padding:9px 18px;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;transition:background .2s;font-family:inherit;display:flex;align-items:center;gap:6px}
+.btn-add:hover{background:#2563eb}
+/* ── ITEMS LIST ── */
+.items-list{display:flex;flex-direction:column;gap:10px}
+.item-card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:14px 18px;transition:border-color .2s}
+.item-card:hover{border-color:#3b82f6}
+.item-row1{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.item-status{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.item-status.published{background:#22c55e}
+.item-status.draft{background:#64748b}
+.item-title{font-size:.93rem;font-weight:600;color:#e2e8f0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.item-row2{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.item-meta{font-size:.75rem;color:#64748b;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.item-tag{background:#1e3a5f;color:#60a5fa;padding:2px 7px;border-radius:10px;font-size:.7rem;white-space:nowrap}
+.item-actions{display:flex;gap:5px;flex-shrink:0}
+.btn-icon{background:none;border:1px solid #334155;color:#94a3b8;padding:6px 12px;border-radius:6px;font-size:.78rem;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-icon:hover{border-color:#60a5fa;color:#60a5fa}
+.btn-icon.del:hover{border-color:#f87171;color:#f87171}
+.btn-icon.toggle.on{border-color:#22c55e;color:#22c55e}
+.empty-state{text-align:center;padding:60px 20px;color:#475569}
+.empty-state .icon{font-size:3rem;margin-bottom:12px;opacity:.4}
+.empty-state p{font-size:.9rem}
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;backdrop-filter:blur(2px)}
+.modal-box{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;background:#1e293b;border:1px solid #334155;border-radius:16px;width:min(600px,95vw);max-height:90vh;overflow-y:auto;padding:32px}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.modal-header h2{font-size:1.15rem;color:#fff}
+.btn-close{background:none;border:none;color:#64748b;font-size:1.4rem;cursor:pointer;line-height:1;transition:color .2s}
+.btn-close:hover{color:#e2e8f0}
+.mform .field{margin-bottom:18px}
+.mform label{display:block;font-size:.8rem;color:#94a3b8;margin-bottom:6px;font-weight:600;letter-spacing:.04em}
+.mform input,.mform textarea,.mform select{width:100%;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:.9rem;font-family:inherit;transition:border-color .2s}
+.mform textarea{resize:vertical;min-height:120px;line-height:1.6}
+.mform input:focus,.mform textarea:focus,.mform select:focus{outline:none;border-color:#3b82f6}
+.mform select option{background:#1e293b}
+.mform .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mform .check-row{display:flex;align-items:center;gap:10px;padding:10px 0}
+.mform .check-row input[type=checkbox]{width:18px;height:18px;accent-color:#3b82f6;cursor:pointer}
+.mform .check-row label{font-size:.9rem;color:#e2e8f0;cursor:pointer;margin:0}
+.modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:24px;padding-top:20px;border-top:1px solid #334155}
+.btn-cancel{background:none;border:1px solid #334155;color:#94a3b8;padding:9px 20px;border-radius:8px;font-size:.88rem;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-cancel:hover{border-color:#64748b;color:#e2e8f0}
+.btn-save{background:#1B3A6B;border:none;color:#fff;padding:9px 24px;border-radius:8px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit;transition:background .2s}
+.btn-save:hover{background:#2563eb}
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;background:#1e293b;border:1px solid #334155;border-radius:10px;padding:12px 20px;font-size:.88rem;color:#e2e8f0;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:2000;transform:translateY(120%);transition:transform .3s;display:flex;align-items:center;gap:10px}
+.toast.show{transform:translateY(0)}
+.toast.success{border-color:#22c55e;color:#86efac}
+.toast.error{border-color:#f87171;color:#fca5a5}
+/* ── VIDEO PREVIEW ── */
+.video-thumb{width:80px;height:50px;object-fit:cover;border-radius:6px;background:#0f172a;display:flex;align-items:center;justify-content:center;color:#475569;font-size:1.4rem;flex-shrink:0}
+/* ── CONFIRM DIALOG ── */
+.confirm-box{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1100;background:#1e293b;border:1px solid #334155;border-radius:12px;padding:28px;width:320px;text-align:center}
+.confirm-box h3{color:#fff;margin-bottom:10px}
+.confirm-box p{color:#94a3b8;font-size:.88rem;margin-bottom:24px}
+.confirm-btns{display:flex;gap:10px;justify-content:center}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN PAGE ── -->
+<div id="page-login">
+  <div class="login-card">
+    <div class="login-logo">
+      <h1>欣寧身心診所</h1>
+      <p>Nazareth Psychiatric Clinic</p>
+      <span class="badge">後台管理系統</span>
+    </div>
+    <form id="login-form" onsubmit="doLogin(event)">
+      <div class="form-group">
+        <label>帳號</label>
+        <input type="text" id="inp-user" placeholder="請輸入帳號" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label>密碼</label>
+        <input type="password" id="inp-pass" placeholder="請輸入密碼" autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn-login">登入</button>
+      <p class="login-error" id="login-err"></p>
+    </form>
+  </div>
+</div>
+
+<!-- ── ADMIN PAGE ── -->
+<div id="page-admin" style="display:none">
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <h2>欣寧身心診所</h2>
+      <p>後台管理系統</p>
+    </div>
+    <nav class="sb-nav">
+      <div class="nav-item active" data-tab="news" onclick="switchTab('news',this)">
+        <span class="icon">📰</span> 最新消息
+      </div>
+      <div class="nav-item" data-tab="articles" onclick="switchTab('articles',this)">
+        <span class="icon">📝</span> 衛教文章
+      </div>
+      <div class="nav-item" data-tab="videos" onclick="switchTab('videos',this)">
+        <span class="icon">🎥</span> 影片連結
+      </div>
+    </nav>
+    <div class="sb-footer">
+      <a class="sb-link" href="index.html" target="_blank">
+        <span>🔗</span> 前台預覽
+      </a>
+      <button class="btn-logout" onclick="doLogout()">⬅ 登出</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="top-bar">
+      <h1 id="top-title">最新消息管理</h1>
+      <span class="user-info">登入：admin</span>
+    </div>
+    <div class="content-area">
+      <div class="toolbar">
+        <div class="toolbar-title"><strong id="count-label">0</strong> 則內容</div>
+        <button class="btn-add" onclick="openAdd()">＋ 新增</button>
+      </div>
+      <div class="items-list" id="items-list">
+        <div class="empty-state">
+          <div class="icon">📭</div>
+          <p>尚無任何內容，點擊「新增」開始發布。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL ── -->
+<div id="modal-overlay" class="modal-overlay" style="display:none" onclick="closeModal()"></div>
+<div id="modal-box" class="modal-box" style="display:none">
+  <div class="modal-header">
+    <h2 id="modal-title">新增最新消息</h2>
+    <button class="btn-close" onclick="closeModal()">✕</button>
+  </div>
+  <form class="mform" id="modal-form" onsubmit="saveItem(event)">
+    <div id="modal-fields"></div>
+    <div class="modal-footer">
+      <button type="button" class="btn-cancel" onclick="closeModal()">取消</button>
+      <button type="submit" class="btn-save">儲存發布</button>
+    </div>
+  </form>
+</div>
+
+<!-- ── CONFIRM ── -->
+<div id="confirm-overlay" class="modal-overlay" style="display:none"></div>
+<div id="confirm-box" class="confirm-box" style="display:none">
+  <h3>確認刪除</h3>
+  <p id="confirm-msg">確定要刪除這筆內容嗎？此操作無法復原。</p>
+  <div class="confirm-btns">
+    <button class="btn-cancel" onclick="closeConfirm()">取消</button>
+    <button class="btn-save" style="background:#7f1d1d" id="confirm-ok">確定刪除</button>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CREDENTIALS ──
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = '22161606';
+
+// ── STORAGE ──
+const KEYS = { news:'xn_news', articles:'xn_articles', videos:'xn_videos', session:'xn_session' };
+// ── 預設公告（首次使用時自動載入）──
+const SEED_NEWS = [
+  {"id":"n_seed_1","title":"115.7.10（六）颱風停診公告","date":"2026-07-10","content":"因巴威颱風來襲，本診所 115.7.10（六）全日休診。\n欣寧身心診所 助您 並 祝您 身心健康。","published":true},
+  {"id":"n_seed_2","title":"颱風停診原則","date":"2026-07-10","content":"若新北市政府宣布停止上班，欣寧身心診所也將同步停診。\n欣寧身心診所 助您 並 祝您 身心健康。","published":true},
+  {"id":"n_seed_3","title":"藥品供貨通知","date":"2026-07-10","content":"因廠商供貨限制，芯安藥局之「安保美喜」存量有限，不便之處敬請見諒。","published":true}
+];
+const SEED_VIDEOS = [
+  {"id":"v_seed_1","title":"【夜夜好眠】破除睡眠迷思，好眠安頓身心！","url":"https://youtu.be/g03rPxPo0_0","content":"行天宮問心書院","date":"2026-07-10","published":true},
+  {"id":"v_seed_2","title":"誰來定義「正常」?（一）了解失智症的重要性","url":"https://youtu.be/IYPoKe0HkYw","content":"行天宮精神醫學","date":"2026-07-10","published":true},
+  {"id":"v_seed_3","title":"誰來定義「正常」?（二）測量非失智與失智之間的距離","url":"https://youtu.be/hm6my2IjwBs","content":"行天宮精神醫學","date":"2026-07-10","published":true},
+  {"id":"v_seed_4","title":"誰來定義「正常」?（三）因應失智症的精神行為問題","url":"https://youtu.be/uL55aO-cSSA","content":"行天宮精神醫學","date":"2026-07-10","published":true},
+  {"id":"v_seed_5","title":"疼惜你的老囡仔─認識失智的情緒行為問題","url":"https://youtu.be/1-ey5FyDZJM","content":"行天宮精神醫學","date":"2026-07-10","published":true},
+  {"id":"v_seed_6","title":"慢性病與情緒健康","url":"https://youtu.be/vVWjf6wkqQg","content":"行天宮精神醫學","date":"2026-07-10","published":true},
+  {"id":"v_seed_7","title":"網癮老人─長者上網成癮｜林立寧醫師","url":"https://youtu.be/gRsdEE66wj0","content":"行天宮精神醫學衛生教育影片","date":"2026-07-10","published":true},
+  {"id":"v_seed_8","title":"睡眠困擾是心身疾患的原因還是結果？｜林立寧","url":"https://youtu.be/4vikyg8Tp9o","content":"精神醫學健康講座","date":"2026-07-10","published":true},
+  {"id":"v_seed_9","title":"善待自己：讓身心呼吸，使生命療癒｜林立寧","url":"https://www.youtube.com/watch?v=iqKOKy-9VzQ","content":"問心書院錄播講座","date":"2026-07-10","published":true}
+];
+const SEED_ARTICLES = [
+  {"id":"a_seed_1","title":"走過初老憂鬱：在人生轉折中重拾節奏","category":"心理健康","author":"林立寧 院長","date":"2025-10-16","url":"https://www.learningandaging.com/post/%E8%B5%B0%E9%81%8E%E5%88%9D%E8%80%81%E6%86%82%E9%AC%B1%EF%BC%9A%E5%9C%A8%E4%BA%BA%E7%94%9F%E8%BD%89%E6%8A%98%E4%B8%AD%E9%87%8D%E6%8B%BE%E7%AF%80%E5%A5%8F","content":"40至65歲的中年轉折期，往往伴隨身體機能改變、家庭角色轉換與職涯調適等課題，不少人因此經歷情緒困擾。初老憂鬱的成因涵蓋生理（內分泌與荷爾蒙變化）、心理（自我價值的質疑）與社會（職場壓力、經濟負擔、家庭角色轉換）三個層面；常見表現包括情緒低落、焦慮易怒、失眠疲勞、社交退縮與記憶力下降。因應策略有四：調整生活型態、強化心理韌性、延展社會支持，以及適時尋求專業協助。","published":true}
+];
+const DB = {
+  get(k){ return JSON.parse(localStorage.getItem(KEYS[k]) || '[]') },
+  set(k,v){ localStorage.setItem(KEYS[k], JSON.stringify(v)) },
+  isLoggedIn(){ return localStorage.getItem(KEYS.session) === '1' },
+  login(){ localStorage.setItem(KEYS.session,'1') },
+  logout(){ localStorage.removeItem(KEYS.session) }
+};
+
+if (localStorage.getItem(KEYS.news) === null) localStorage.setItem(KEYS.news, JSON.stringify(SEED_NEWS));
+if (localStorage.getItem(KEYS.videos) === null) localStorage.setItem(KEYS.videos, JSON.stringify(SEED_VIDEOS));
+if (localStorage.getItem(KEYS.articles) === null) localStorage.setItem(KEYS.articles, JSON.stringify(SEED_ARTICLES));
+
+// ── TAB STATE ──
+let curTab = 'news';
+let editId = null;
+
+const TAB_META = {
+  news:     { label:'最新消息', icon:'📰', emptyTxt:'尚無任何消息' },
+  articles: { label:'衛教文章', icon:'📝', emptyTxt:'尚無任何文章' },
+  videos:   { label:'影片連結', icon:'🎥', emptyTxt:'尚無任何影片' }
+};
+
+// ── INIT ──
+(function init(){
+  if(DB.isLoggedIn()) showAdmin();
+  else showLogin();
+})();
+
+// ── AUTH ──
+function doLogin(e){
+  e.preventDefault();
+  const u = document.getElementById('inp-user').value.trim();
+  const p = document.getElementById('inp-pass').value;
+  if(u === ADMIN_USER && p === ADMIN_PASS){
+    DB.login();
+    showAdmin();
+  } else {
+    const err = document.getElementById('login-err');
+    err.textContent = '帳號或密碼錯誤，請重試。';
+    setTimeout(()=> err.textContent='', 3000);
+  }
+}
+
+function doLogout(){
+  DB.logout();
+  location.reload();
+}
+
+function showLogin(){
+  document.getElementById('page-login').style.display='flex';
+  document.getElementById('page-admin').style.display='none';
+}
+
+function showAdmin(){
+  document.getElementById('page-login').style.display='none';
+  document.getElementById('page-admin').style.display='flex';
+  renderList();
+}
+
+// ── TAB SWITCH ──
+function switchTab(tab, el){
+  curTab = tab;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+  const meta = TAB_META[tab];
+  document.getElementById('top-title').textContent = meta.label + '管理';
+  renderList();
+}
+
+// ── RENDER ──
+function renderList(){
+  const items = DB.get(curTab);
+  const meta = TAB_META[curTab];
+  const count = document.getElementById('count-label');
+  const list  = document.getElementById('items-list');
+  count.textContent = items.length;
+
+  if(!items.length){
+    list.innerHTML = `<div class="empty-state"><div class="icon">${meta.icon}</div><p>${meta.emptyTxt}，點擊「新增」開始發布。</p></div>`;
+    return;
+  }
+
+  list.innerHTML = items.map(item => renderCard(item)).join('');
+}
+
+function renderCard(item){
+  const pub = item.published;
+  let meta2 = `<span>${formatDate(item.date)}</span>`;
+  if(curTab==='articles' && item.category) meta2 += `<span class="item-tag">${item.category}</span>`;
+  if(curTab==='articles' && item.author)   meta2 += `<span>${item.author}</span>`;
+  if(curTab==='videos' && item.url)        meta2 += `<span style="color:#3b82f6">${truncate(item.url,40)}</span>`;
+
+  return `<div class="item-card">
+    <div class="item-row1">
+      <div class="item-status ${pub?'published':'draft'}"></div>
+      <div class="item-title">${esc(item.title||'（無標題）')}</div>
+    </div>
+    <div class="item-row2">
+      <div class="item-meta">${meta2}<span style="color:${pub?'#22c55e':'#64748b'}">${pub?'已發布':'草稿'}</span></div>
+      <div class="item-actions">
+        <button class="btn-icon toggle ${pub?'on':''}" onclick="togglePublish('${item.id}')">${pub?'取消發布':'發布'}</button>
+        <button class="btn-icon" onclick="openEdit('${item.id}')">編輯</button>
+        <button class="btn-icon del" onclick="confirmDelete('${item.id}')">刪除</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── MODAL (ADD/EDIT) ──
+function getFields(){
+  if(curTab==='news') return `
+    <div class="field"><label>標題 *</label><input name="title" required placeholder="公告標題"></div>
+    <div class="field"><label>內容</label><textarea name="content" placeholder="公告內容（支援換行）"></textarea></div>
+    <div class="field row">
+      <div><label>發布日期</label><input type="date" name="date"></div>
+    </div>
+    <div class="field check-row"><input type="checkbox" name="published" id="pub-chk" checked><label for="pub-chk">立即發布</label></div>`;
+
+  if(curTab==='articles') return `
+    <div class="field"><label>標題 *</label><input name="title" required placeholder="文章標題"></div>
+    <div class="field row">
+      <div><label>作者</label><input name="author" placeholder="例：林立寧 院長"></div>
+      <div><label>分類</label>
+        <select name="category">
+          <option value="">選擇分類</option>
+          <option>睡眠健康</option><option>焦慮與壓力</option><option>憂鬱症</option>
+          <option>家庭與親子</option><option>青少年心理</option><option>老年心理</option>
+          <option>成癮問題</option><option>一般衛教</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>內容</label><textarea name="content" placeholder="文章內容..." style="min-height:180px"></textarea></div>
+    <div class="field"><label>發布日期</label><input type="date" name="date" style="max-width:200px"></div>
+    <div class="field check-row"><input type="checkbox" name="published" id="pub-chk" checked><label for="pub-chk">立即發布</label></div>`;
+
+  if(curTab==='videos') return `
+    <div class="field"><label>影片標題 *</label><input name="title" required placeholder="影片標題"></div>
+    <div class="field"><label>YouTube 網址 *</label><input name="url" required placeholder="https://www.youtube.com/watch?v=..."></div>
+    <div class="field"><label>說明文字</label><textarea name="content" placeholder="影片說明（選填）"></textarea></div>
+    <div class="field"><label>發布日期</label><input type="date" name="date" style="max-width:200px"></div>
+    <div class="field check-row"><input type="checkbox" name="published" id="pub-chk" checked><label for="pub-chk">立即發布</label></div>`;
+}
+
+function openAdd(){
+  editId = null;
+  const meta = TAB_META[curTab];
+  document.getElementById('modal-title').textContent = '新增' + meta.label;
+  document.getElementById('modal-fields').innerHTML = getFields();
+  // Set default date to today
+  const dateInp = document.querySelector('#modal-fields input[name=date]');
+  if(dateInp) dateInp.value = todayStr();
+  showModal();
+}
+
+function openEdit(id){
+  const items = DB.get(curTab);
+  const item = items.find(i=>i.id===id);
+  if(!item) return;
+  editId = id;
+  const meta = TAB_META[curTab];
+  document.getElementById('modal-title').textContent = '編輯' + meta.label;
+  document.getElementById('modal-fields').innerHTML = getFields();
+  // Populate fields
+  const form = document.getElementById('modal-form');
+  Object.keys(item).forEach(k=>{
+    const el = form.querySelector(`[name="${k}"]`);
+    if(!el) return;
+    if(el.type==='checkbox') el.checked = !!item[k];
+    else el.value = item[k] || '';
+  });
+  showModal();
+}
+
+function saveItem(e){
+  e.preventDefault();
+  const form = document.getElementById('modal-form');
+  const fd = new FormData(form);
+  const data = {};
+  // Get all named inputs
+  form.querySelectorAll('[name]').forEach(el=>{
+    if(el.type==='checkbox') data[el.name] = el.checked;
+    else data[el.name] = el.value.trim();
+  });
+
+  const items = DB.get(curTab);
+  if(editId){
+    const idx = items.findIndex(i=>i.id===editId);
+    if(idx>=0) items[idx] = { ...items[idx], ...data };
+  } else {
+    data.id = 'id_' + Date.now();
+    if(!data.date) data.date = todayStr();
+    items.unshift(data);
+  }
+  DB.set(curTab, items);
+  closeModal();
+  renderList();
+  toast(editId ? '已更新內容' : '已新增並發布', 'success');
+}
+
+function showModal(){
+  document.getElementById('modal-overlay').style.display='block';
+  document.getElementById('modal-box').style.display='block';
+}
+function closeModal(){
+  document.getElementById('modal-overlay').style.display='none';
+  document.getElementById('modal-box').style.display='none';
+  editId = null;
+}
+
+// ── TOGGLE PUBLISH ──
+function togglePublish(id){
+  const items = DB.get(curTab);
+  const item = items.find(i=>i.id===id);
+  if(!item) return;
+  item.published = !item.published;
+  DB.set(curTab, items);
+  renderList();
+  toast(item.published ? '已發布到前台' : '已取消發布', item.published?'success':'');
+}
+
+// ── DELETE ──
+let deleteTarget = null;
+function confirmDelete(id){
+  deleteTarget = id;
+  document.getElementById('confirm-overlay').style.display='block';
+  document.getElementById('confirm-box').style.display='block';
+  document.getElementById('confirm-ok').onclick = executeDelete;
+}
+function closeConfirm(){
+  deleteTarget = null;
+  document.getElementById('confirm-overlay').style.display='none';
+  document.getElementById('confirm-box').style.display='none';
+}
+function executeDelete(){
+  if(!deleteTarget) return;
+  const items = DB.get(curTab).filter(i=>i.id!==deleteTarget);
+  DB.set(curTab, items);
+  closeConfirm();
+  renderList();
+  toast('已刪除', 'error');
+}
+
+// ── TOAST ──
+function toast(msg, type=''){
+  const el = document.getElementById('toast');
+  el.textContent = (type==='success'?'✓ ':type==='error'?'✕ ':'') + msg;
+  el.className = 'toast show ' + type;
+  setTimeout(()=> el.classList.remove('show'), 2800);
+}
+
+// ── UTILS ──
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
+function truncate(s,n){ return s.length>n ? s.slice(0,n)+'…' : s }
+function todayStr(){ return new Date().toISOString().slice(0,10) }
+function formatDate(d){
+  if(!d) return '';
+  const [y,m,day] = d.split('-');
+  return `${y}年${m}月${day}日`;
+}
+</script>
+</body>
+</html>
