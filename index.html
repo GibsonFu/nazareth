@@ -109,7 +109,7 @@ nav{position:sticky;top:0;z-index:100;background:#1B3A6B;box-shadow:0 2px 8px rg
 .fees-table tbody tr:hover{background:#eef3fa}
 .fees-table td:first-child{text-align:left;font-weight:600;color:#1B3A6B}
 .fees-notes{margin-top:18px;font-size:.82rem;color:#777;line-height:1.8;padding:16px;background:#fffdf0;border-radius:8px;border-left:3px solid #C4951A}
-.visit-grid{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start}
+.visit-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:stretch}
 .visit-info-box{background:#fff;border-radius:12px;padding:28px;box-shadow:0 2px 16px rgba(0,0,0,.07)}
 .visit-info-box h3{color:#1B3A6B;font-size:1.1rem;margin-bottom:16px;border-bottom:2px solid #C4951A;padding-bottom:8px}
 .visit-item{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
@@ -259,6 +259,13 @@ footer{background:linear-gradient(180deg,#1B3A6B 0%,#122a52 100%);padding:48px 2
   .scroll-hint,.fb-float::before{animation:none}
 }
 
+/* ═══ 就診資訊排版 ═══ */
+.visit-left{display:flex;flex-direction:column;gap:22px}
+.visit-left .visit-info-box{margin:0}
+.map-wrap{height:100%;display:flex;flex-direction:column}
+.map-wrap iframe{flex:1;height:auto;min-height:380px}
+@media(max-width:768px){.map-wrap iframe{min-height:300px}}
+
 /* ═══ NEWS 一頁式 ═══ */
 #latest-news{min-height:calc(100vh - 56px);display:flex;align-items:center;background:linear-gradient(165deg,#FDFCFA 0%,#F6F2EA 70%,#F1EBDF 100%);padding:72px 24px}
 .news-layout{display:grid;grid-template-columns:290px 1fr;gap:60px;align-items:center;max-width:1100px;margin:auto;width:100%}
@@ -312,6 +319,18 @@ a.dyn-card.video{display:block;text-decoration:none;cursor:pointer}
 .dyn-card.article .dyn-card-cat{background:#2B5F75;color:#fff}
 .read-more{display:inline-block;margin-top:14px;color:#B8850A;font-size:.85rem;font-weight:700;text-decoration:none;letter-spacing:.05em;transition:letter-spacing .25s}
 .read-more:hover{letter-spacing:.14em}
+
+/* ═══ 頁尾（橫向緊湊）═══ */
+footer{padding:22px 24px 12px;text-align:left}
+.footer-inner{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.footer-brand h4{font-size:1.08rem;margin-bottom:3px;letter-spacing:.08em}
+.footer-brand p{font-size:.76rem;opacity:.75;line-height:1.5}
+.footer-brand .slogan{color:#C4951A;opacity:1}
+.footer-contact{text-align:right;font-size:.84rem;line-height:1.8}
+.footer-contact p{font-size:.84rem}
+.footer-bottom{max-width:1100px;margin:14px auto 0;padding-top:10px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;align-items:center;font-size:.7rem;opacity:.55;flex-wrap:wrap;gap:8px}
+.footer-bottom a{color:rgba(255,255,255,.7)}
+@media(max-width:640px){.footer-inner{flex-direction:column;text-align:center;gap:10px}.footer-contact{text-align:center}.footer-bottom{justify-content:center}}
 </style>
 </head>
 <body>
@@ -751,6 +770,7 @@ a.dyn-card.video{display:block;text-decoration:none;cursor:pointer}
       <p>我們在這裡等您，歡迎各種方式前來</p>
     </div>
     <div class="visit-grid">
+      <div class="visit-left">
       <div class="visit-info-box">
         <h3>📍 診所位置與聯絡</h3>
         <div class="visit-item">
@@ -770,8 +790,7 @@ a.dyn-card.video{display:block;text-decoration:none;cursor:pointer}
           <p><strong>自行開車</strong><br>請設定導航至「新北市三峽區文化路266-9號」</p>
         </div>
       </div>
-      <div>
-        <div class="visit-info-box" style="margin-bottom:16px">
+        <div class="visit-info-box">
           <h3>🚌 大眾運輸路線</h3>
           <div class="route-card">
             <h4>路線一｜捷運 + 916 路公車</h4>
@@ -782,24 +801,29 @@ a.dyn-card.video{display:block;text-decoration:none;cursor:pointer}
             <p>搭乘 <strong>263</strong> 路公車至<strong>三峽國小站</strong>或<strong>魚網廠站</strong>，步行約 <strong>1 分鐘</strong>。</p>
           </div>
         </div>
+      </div>
         <div class="map-wrap">
           <iframe src="https://www.google.com/maps/embed?origin=mfe&pb=!1m3!2m1!1z5qyj5a-n6Lqr5b-D6Ki65omA!6i17!3m1!1szh-TW!5m1!1szh-TW" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="欣寧身心診所位置地圖" allowfullscreen></iframe>
           <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=%E6%AC%A3%E5%AF%A7%E8%BA%AB%E5%BF%83%E8%A8%BA%E6%89%80" target="_blank" rel="noopener">🗺️ 在 Google 地圖中開啟導航</a>
         </div>
-      </div>
     </div>
   </div>
 </section>
 
 <footer>
-  <h4>欣寧身心診所</h4>
-  <p>Nazareth Psychiatric Clinic</p>
-  <p style="margin-top:6px;font-size:.9rem;color:#C4951A">欣然新生，擁抱寧靜</p>
-  <hr class="divider">
-  <p>📍 新北市三峽區文化路266-9號1樓<br>
-     📞 <a href="tel:0226722225">(02) 2672-2225</a></p>
-  <p style="margin-bottom:8px"><a href="admin.html" style="color:#64748b;font-size:.72rem;opacity:.5">管理後台</a></p>
-  <p class="copyright">© 2025 欣寧身心診所 All Rights Reserved.</p>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <h4>欣寧身心診所</h4>
+      <p>Nazareth Psychiatric Clinic ｜ <span class="slogan">欣然新生，擁抱寧靜</span></p>
+    </div>
+    <div class="footer-contact">
+      <p>📍 新北市三峽區文化路266-9號1樓</p>
+      <p>📞 <a href="tel:0226722225">(02) 2672-2225</a></p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 欣寧身心診所 All Rights Reserved.</span>
+  </div>
 </footer>
 
 
