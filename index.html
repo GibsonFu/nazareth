@@ -888,7 +888,11 @@ footer{padding:22px 24px 12px;text-align:left}
         <h3>${esc(a.title)}</h3>
         <p>${esc(a.content)}</p>
         ${a.author?'<p class="author">文／'+esc(a.author)+'</p>':''}
-        ${a.url?'<a class="read-more" href="'+esc(a.url)+'" target="_blank" rel="noopener">閱讀全文 →</a>':''}
+        ${a.url
+          ? '<a class="read-more" href="'+esc(a.url)+'" target="_blank" rel="noopener">閱讀全文 →</a>'
+          : ((a.pdf&&a.pdf.data)
+            ? '<span class="read-more" style="cursor:pointer" onclick="openArticlePdf(&quot;'+a.id+'&quot;)">📄 開啟 PDF</span>'
+            : '')}
       </div>`).join('');
   }
 
@@ -932,6 +936,18 @@ footer{padding:22px 24px 12px;text-align:left}
     }).join('');
   }
 })();
+
+// ── 文章 PDF 開啟 ──
+function openArticlePdf(id){
+  const arts = JSON.parse(localStorage.getItem('xn_articles')||'[]');
+  const a = arts.find(x=>x.id===id);
+  if(!a || !a.pdf || !a.pdf.data) return;
+  const b64 = a.pdf.data.split(',')[1];
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) arr[i] = bin.charCodeAt(i);
+  window.open(URL.createObjectURL(new Blob([arr], {type:'application/pdf'})), '_blank');
+}
 </script>
 
 <a class="fb-float" href="https://www.facebook.com/groups/254012400843699" target="_blank" rel="noopener" aria-label="加入欣寧身心診所 Facebook 社團">

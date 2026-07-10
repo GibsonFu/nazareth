@@ -105,6 +105,13 @@ a{text-decoration:none;color:inherit}
 .confirm-box h3{color:#fff;margin-bottom:10px}
 .confirm-box p{color:#94a3b8;font-size:.88rem;margin-bottom:24px}
 .confirm-btns{display:flex;gap:10px;justify-content:center}
+.chip-link{display:inline-flex;align-items:center;gap:3px;background:#173252;color:#7db4f5;padding:2px 9px;border-radius:10px;font-size:.72rem;cursor:pointer;text-decoration:none;white-space:nowrap;transition:background .2s}
+.chip-link:hover{background:#1e4270;color:#a8ccf8}
+.pdf-status{margin-top:8px;display:flex;align-items:center;gap:10px}
+.pdf-chip{background:#173252;color:#7db4f5;padding:4px 12px;border-radius:8px;font-size:.78rem}
+#pdf-file{color:#94a3b8;font-size:.8rem}
+#pdf-file::file-selector-button{background:#334155;color:#e2e8f0;border:none;padding:7px 14px;border-radius:8px;cursor:pointer;margin-right:10px;font-family:inherit;font-size:.78rem}
+#pdf-file::file-selector-button:hover{background:#3e4f68}
 </style>
 </head>
 <body>
@@ -325,6 +332,8 @@ function renderCard(item){
   let meta2 = `<span>${formatDate(item.date)}</span>`;
   if(curTab==='articles' && item.category) meta2 += `<span class="item-tag">${item.category}</span>`;
   if(curTab==='articles' && item.author)   meta2 += `<span>${item.author}</span>`;
+  if(curTab==='articles' && item.url)      meta2 += `<a class="chip-link" href="${esc(item.url)}" target="_blank" rel="noopener">🔗 開啟網址</a>`;
+  if(curTab==='articles' && item.pdf && item.pdf.data) meta2 += `<span class="chip-link" onclick="openPdf('${item.id}')">📄 開啟 PDF</span>`;
   if(curTab==='videos' && item.url)        meta2 += `<span style="color:#3b82f6">${truncate(item.url,40)}</span>`;
 
   return `<div class="item-card">
@@ -341,6 +350,53 @@ function renderCard(item){
       </div>
     </div>
   </div>`;
+}
+
+// ── PDF 附件 ──
+let pendingPdf = null;   // {name, data(base64 dataURL)} | null
+
+function handlePdf(input){
+  const f = input.files && input.files[0];
+  if(!f) return;
+  if(f.size > 3 * 1024 * 1024){
+    toast('PDF 檔案過大（上限 3MB）', 'error');
+    input.value = '';
+    return;
+  }
+  const rd = new FileReader();
+  rd.onload = () => {
+    pendingPdf = { name: f.name, data: rd.result };
+    renderPdfStatus();
+  };
+  rd.readAsDataURL(f);
+}
+
+function removePdf(){
+  pendingPdf = null;
+  const fi = document.getElementById('pdf-file');
+  if(fi) fi.value = '';
+  renderPdfStatus();
+}
+
+function renderPdfStatus(){
+  const box = document.getElementById('pdf-status');
+  if(!box) return;
+  box.innerHTML = pendingPdf
+    ? `<span class="pdf-chip">📄 ${esc(pendingPdf.name)}</span><button type="button" class="btn-icon del" style="padding:3px 10px;font-size:.72rem" onclick="removePdf()">移除</button>`
+    : '<span style="color:#64748b;font-size:.76rem">尚未選擇檔案</span>';
+}
+
+function pdfBlobUrl(dataUrl){
+  const b64 = dataUrl.split(',')[1];
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) arr[i] = bin.charCodeAt(i);
+  return URL.createObjectURL(new Blob([arr], {type:'application/pdf'}));
+}
+
+function openPdf(id){
+  const item = DB.get(curTab).find(i=>i.id===id);
+  if(item && item.pdf && item.pdf.data) window.open(pdfBlobUrl(item.pdf.data), '_blank');
 }
 
 // ── MODAL (ADD/EDIT) ──
@@ -367,6 +423,11 @@ function getFields(){
       </div>
     </div>
     <div class="field"><label>內容</label><textarea name="content" placeholder="文章內容..." style="min-height:180px"></textarea></div>
+    <div class="field"><label>文章網址（選填）</label><input name="url" placeholder="https://…　前台會顯示「閱讀全文」連結"></div>
+    <div class="field"><label>PDF 檔案（選填，上限 3MB）</label>
+      <input type="file" id="pdf-file" accept="application/pdf" onchange="handlePdf(this)">
+      <div id="pdf-status" class="pdf-status"></div>
+    </div>
     <div class="field"><label>發布日期</label><input type="date" name="date" style="max-width:200px"></div>
     <div class="field check-row"><input type="checkbox" name="published" id="pub-chk" checked><label for="pub-chk">立即發布</label></div>`;
 
@@ -380,12 +441,14 @@ function getFields(){
 
 function openAdd(){
   editId = null;
+  pendingPdf = null;
   const meta = TAB_META[curTab];
   document.getElementById('modal-title').textContent = '新增' + meta.label;
   document.getElementById('modal-fields').innerHTML = getFields();
   // Set default date to today
   const dateInp = document.querySelector('#modal-fields input[name=date]');
   if(dateInp) dateInp.value = todayStr();
+  renderPdfStatus();
   showModal();
 }
 
@@ -405,6 +468,8 @@ function openEdit(id){
     if(el.type==='checkbox') el.checked = !!item[k];
     else el.value = item[k] || '';
   });
+  pendingPdf = (item.pdf && item.pdf.data) ? item.pdf : null;
+  renderPdfStatus();
   showModal();
 }
 
@@ -419,6 +484,8 @@ function saveItem(e){
     else data[el.name] = el.value.trim();
   });
 
+  if(curTab === 'articles') data.pdf = pendingPdf;
+
   const items = DB.get(curTab);
   if(editId){
     const idx = items.findIndex(i=>i.id===editId);
@@ -428,7 +495,12 @@ function saveItem(e){
     if(!data.date) data.date = todayStr();
     items.unshift(data);
   }
-  DB.set(curTab, items);
+  try {
+    DB.set(curTab, items);
+  } catch(err) {
+    toast('儲存失敗：空間不足，請改用較小的 PDF 或移除舊附件', 'error');
+    return;
+  }
   closeModal();
   renderList();
   toast(editId ? '已更新內容' : '已新增並發布', 'success');
