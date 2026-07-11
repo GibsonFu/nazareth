@@ -248,7 +248,11 @@ const SEED_ARTICLES = [
 ];
 const DB = {
   get(k){ return JSON.parse(localStorage.getItem(KEYS[k]) || '[]') },
-  set(k,v){ localStorage.setItem(KEYS[k], JSON.stringify(v)) },
+  set(k,v){
+    localStorage.setItem(KEYS[k], JSON.stringify(v));
+    localStorage.setItem('xn_dirty', '1');
+    updateDirtyBanner();
+  },
   isLoggedIn(){ return localStorage.getItem(KEYS.session) === '1' },
   login(){ localStorage.setItem(KEYS.session,'1') },
   logout(){ localStorage.removeItem(KEYS.session) }
@@ -257,6 +261,24 @@ const DB = {
 if (localStorage.getItem(KEYS.news) === null) localStorage.setItem(KEYS.news, JSON.stringify(SEED_NEWS));
 if (localStorage.getItem(KEYS.videos) === null) localStorage.setItem(KEYS.videos, JSON.stringify(SEED_VIDEOS));
 if (localStorage.getItem(KEYS.articles) === null) localStorage.setItem(KEYS.articles, JSON.stringify(SEED_ARTICLES));
+
+// ── 未發布變更提醒橫幅 ──
+function ensureDirtyBanner(){
+  if(document.getElementById('dirty-banner')) return;
+  const main = document.querySelector('.main');
+  if(!main) return;
+  const b = document.createElement('div');
+  b.id = 'dirty-banner';
+  b.style.cssText = 'display:none;background:linear-gradient(90deg,#7c2d12,#92400e);color:#fde68a;padding:11px 24px;font-size:.86rem;display:flex;align-items:center;gap:12px;border-bottom:1px solid #b45309';
+  b.innerHTML = '⚠️ <b>有尚未發布的變更</b> — 目前只有您看得到，訪客還看不到。請按左下角「🚀 發布到網站」正式發布。<button onclick="publishFromBanner()" style="margin-left:auto;background:#C4951A;color:#fff;border:none;padding:6px 16px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:.82rem;font-weight:700;white-space:nowrap">立即發布</button>';
+  main.insertBefore(b, main.children[1] || null);
+  updateDirtyBanner();
+}
+function publishFromBanner(){ publishSite(document.querySelector(".btn-publish")); }
+function updateDirtyBanner(){
+  const b = document.getElementById('dirty-banner');
+  if(b) b.style.display = localStorage.getItem('xn_dirty') === '1' ? 'flex' : 'none';
+}
 
 // ── 發布到網站（將內容推送到 GitHub 的 data.json，全站訪客都能看到）──
 const GH_OWNER = 'GibsonFu';
@@ -295,6 +317,8 @@ async function publishSite(btn){
     const r = await fetch(api, { method:'PUT', headers: hdr, body: JSON.stringify(body) });
     if(r.ok){
       toast('✅ 已發布！約 1～2 分鐘後全站訪客都會看到新內容', 'success');
+      localStorage.removeItem('xn_dirty');
+      updateDirtyBanner();
     } else if(r.status === 401 || r.status === 403){
       localStorage.removeItem('xn_gh_token');
       toast('Token 無效或權限不足，請重新發布並輸入新 Token', 'error');
@@ -379,8 +403,10 @@ function renderList(){
   }
 
   list.innerHTML = items.map(item => renderCard(item)).join('');
+  ensureDirtyBanner();
 }
 
+function initBannerOnce(){ ensureDirtyBanner(); }
 function renderCard(item){
   const pub = item.published;
   let meta2 = `<span>${formatDate(item.date)}</span>`;
