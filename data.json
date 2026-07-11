@@ -1,0 +1,112 @@
+{
+ "news": [
+  {
+   "id": "n_seed_1",
+   "title": "115.7.10（六）颱風停診公告",
+   "date": "2026-07-10",
+   "content": "因巴威颱風來襲，本診所 115.7.10（六）全日休診。\n欣寧身心診所 助您 並 祝您 身心健康。",
+   "published": true
+  },
+  {
+   "id": "n_seed_2",
+   "title": "颱風停診原則",
+   "date": "2026-07-10",
+   "content": "若新北市政府宣布停止上班，欣寧身心診所也將同步停診。\n欣寧身心診所 助您 並 祝您 身心健康。",
+   "published": true
+  },
+  {
+   "id": "n_seed_3",
+   "title": "藥品供貨通知",
+   "date": "2026-07-10",
+   "content": "因廠商供貨限制，芯安藥局之「安保美喜」存量有限，不便之處敬請見諒。",
+   "published": true
+  }
+ ],
+ "articles": [
+  {
+   "id": "a_seed_1",
+   "title": "走過初老憂鬱：在人生轉折中重拾節奏",
+   "category": "心理健康",
+   "author": "林立寧 院長",
+   "date": "2025-10-16",
+   "url": "https://www.learningandaging.com/post/%E8%B5%B0%E9%81%8E%E5%88%9D%E8%80%81%E6%86%82%E9%AC%B1%EF%BC%9A%E5%9C%A8%E4%BA%BA%E7%94%9F%E8%BD%89%E6%8A%98%E4%B8%AD%E9%87%8D%E6%8B%BE%E7%AF%80%E5%A5%8F",
+   "content": "40至65歲的中年轉折期，往往伴隨身體機能改變、家庭角色轉換與職涯調適等課題，不少人因此經歷情緒困擾。初老憂鬱的成因涵蓋生理（內分泌與荷爾蒙變化）、心理（自我價值的質疑）與社會（職場壓力、經濟負擔、家庭角色轉換）三個層面；常見表現包括情緒低落、焦慮易怒、失眠疲勞、社交退縮與記憶力下降。因應策略有四：調整生活型態、強化心理韌性、延展社會支持，以及適時尋求專業協助。",
+   "published": true
+  }
+ ],
+ "videos": [
+  {
+   "id": "v_seed_1",
+   "title": "【夜夜好眠】破除睡眠迷思，好眠安頓身心！",
+   "url": "https://youtu.be/g03rPxPo0_0",
+   "content": "行天宮問心書院",
+   "date": "2026-07-10",
+   "published": true
+  },
+  {
+   "id": "v_seed_2",
+   "title": "誰來定義「正常」?（一）了解失智症的重要性",
+   "url": "https://youtu.be/IYPoKe0HkYw",
+   "content": "行天宮精神醫學",
+   "date": "2026-07-10",
+   "published": true
+  },
+  {
+   "id": "v_seed_3",
+   "title": "誰來定義「正常」?（二）測量非失智與失智之間的距離",
+   "url": "https://youtu.be/hm6my2IjwBs",
+   "content": "行天宮精神醫學",
+   "date": "2026-07-10",
+   "published": true
+  },
+  {
+   "id": "v_seed_4",
+   "title": "誰來定義「正常」?（三）因應失智症的精神行為問題",
+   "url": "https://youtu.be/uL55aO-cSSA",
+   "content": "行天宮精神醫學",
+   "date": "2026-07-10",
+   "published": true
+  },
+  {
+   "id": "v_seed_5",
+   "title": "疼惜你的老囡仔─認識失智的情緒行為問題",
+   "url": "https://youtu.be/1-ey5FyDZJM",
+   "content": "行天宮精神醫學",
+   "date": "2026-07-10",
+   "published": true
+  },
+  {
+   "id": "v_seed_6",
+   "title": "慢性病與情緒健康",
+   "url": "https://youtu.be/vVWjf6wkqQg",
+   "content": "行天宮精神醫學",
+   "date": "2026-07-10",
+   "published": true
+  },
+  {
+   "id": "v_seed_7",
+   "title": "網癮老人─長者上網成癮｜林立寧醫師",
+   "url": "https://youtu.be/gRsdEE66wj0",
+   "content": "行天宮精神醫學衛生教育影片",
+   "date": "2026-07-10",
+   "published": true
+  },
+  {
+   "id": "v_seed_8",
+   "title": "睡眠困擾是心身疾患的原因還是結果？｜林立寧",
+   "url": "https://youtu.be/4vikyg8Tp9o",
+   "content": "精神醫學健康講座",
+   "date": "2026-07-10",
+   "published": true
+  },
+  {
+   "id": "v_seed_9",
+   "title": "善待自己：讓身心呼吸，使生命療癒｜林立寧",
+   "url": "https://www.youtube.com/watch?v=iqKOKy-9VzQ",
+   "content": "問心書院錄播講座",
+   "date": "2026-07-10",
+   "published": true
+  }
+ ],
+ "publishedAt": "2026-07-10T00:00:00Z"
+}

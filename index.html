@@ -852,8 +852,21 @@ footer{padding:22px 24px 12px;text-align:left}
 
 
 <script>
-// ── 動態內容載入（從 localStorage 讀取後台發布的資料）──
-(function loadDynamic(){
+// ── 動態內容載入 ──
+// 訪客：讀取已發布的 data.json（由後台「發布到網站」產生）
+// 管理者（此瀏覽器已登入後台）：讀取 localStorage 即時預覽尚未發布的修改
+(async function loadDynamic(){
+  let SITE = null;
+  const isAdminHere = localStorage.getItem('xn_session') === '1';
+  if(!isAdminHere){
+    try {
+      const r = await fetch('data.json?v=' + Date.now(), { cache: 'no-store' });
+      if(r.ok) SITE = await r.json();
+    } catch(e){ /* 本機 file:// 或尚未發布 → 改用 localStorage */ }
+  }
+  function siteList(key, localList){
+    return (SITE && Array.isArray(SITE[key])) ? SITE[key] : localList;
+  }
   function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
   function fmtDate(d){
     if(!d) return '';
@@ -877,8 +890,8 @@ footer{padding:22px 24px 12px;text-align:left}
   {"id":"n_seed_3","title":"藥品供貨通知","date":"2026-07-10","content":"因廠商供貨限制，芯安藥局之「安保美喜」存量有限，不便之處敬請見諒。","published":true}
 ];
   let newsAll = JSON.parse(localStorage.getItem('xn_news')||'null');
-  if(!Array.isArray(newsAll)){ newsAll = SEED_NEWS; localStorage.setItem('xn_news', JSON.stringify(newsAll)); }
-  const news = newsAll.filter(i=>i.published);
+  if(!Array.isArray(newsAll)){ newsAll = SEED_NEWS; try{localStorage.setItem('xn_news', JSON.stringify(newsAll));}catch(e){} }
+  const news = siteList('news', newsAll).filter(i=>i.published);
   const ng = document.getElementById('news-grid');
   if(ng && news.length){
     ng.innerHTML = news.map((n,idx)=>{
@@ -899,8 +912,9 @@ footer{padding:22px 24px 12px;text-align:left}
   {"id":"a_seed_1","title":"走過初老憂鬱：在人生轉折中重拾節奏","category":"心理健康","author":"林立寧 院長","date":"2025-10-16","url":"https://www.learningandaging.com/post/%E8%B5%B0%E9%81%8E%E5%88%9D%E8%80%81%E6%86%82%E9%AC%B1%EF%BC%9A%E5%9C%A8%E4%BA%BA%E7%94%9F%E8%BD%89%E6%8A%98%E4%B8%AD%E9%87%8D%E6%8B%BE%E7%AF%80%E5%A5%8F","content":"40至65歲的中年轉折期，往往伴隨身體機能改變、家庭角色轉換與職涯調適等課題，不少人因此經歷情緒困擾。初老憂鬱的成因涵蓋生理（內分泌與荷爾蒙變化）、心理（自我價值的質疑）與社會（職場壓力、經濟負擔、家庭角色轉換）三個層面；常見表現包括情緒低落、焦慮易怒、失眠疲勞、社交退縮與記憶力下降。因應策略有四：調整生活型態、強化心理韌性、延展社會支持，以及適時尋求專業協助。","published":true}
 ];
   let artsAll = JSON.parse(localStorage.getItem('xn_articles')||'null');
-  if(!Array.isArray(artsAll)){ artsAll = SEED_ARTICLES; localStorage.setItem('xn_articles', JSON.stringify(artsAll)); }
-  const arts = artsAll.filter(i=>i.published);
+  if(!Array.isArray(artsAll)){ artsAll = SEED_ARTICLES; try{localStorage.setItem('xn_articles', JSON.stringify(artsAll));}catch(e){} }
+  const arts = siteList('articles', artsAll).filter(i=>i.published);
+  window.__site_articles = arts;
   const ag = document.getElementById('articles-grid');
   if(ag && arts.length){
     ag.innerHTML = arts.map(a=>`
@@ -933,8 +947,8 @@ footer{padding:22px 24px 12px;text-align:left}
   {"id":"v_seed_9","title":"善待自己：讓身心呼吸，使生命療癒｜林立寧","url":"https://www.youtube.com/watch?v=iqKOKy-9VzQ","content":"問心書院錄播講座","date":"2026-07-10","published":true}
 ];
   let vidsAll = JSON.parse(localStorage.getItem('xn_videos')||'null');
-  if(!Array.isArray(vidsAll)){ vidsAll = SEED_VIDEOS; localStorage.setItem('xn_videos', JSON.stringify(vidsAll)); }
-  const vids = vidsAll.filter(i=>i.published);
+  if(!Array.isArray(vidsAll)){ vidsAll = SEED_VIDEOS; try{localStorage.setItem('xn_videos', JSON.stringify(vidsAll));}catch(e){} }
+  const vids = siteList('videos', vidsAll).filter(i=>i.published);
   const vg = document.getElementById('videos-grid');
   if(vg && vids.length){
     vg.innerHTML = vids.map(v=>{
@@ -963,7 +977,7 @@ footer{padding:22px 24px 12px;text-align:left}
 
 // ── 文章 PDF 開啟 ──
 function openArticlePdf(id){
-  const arts = JSON.parse(localStorage.getItem('xn_articles')||'[]');
+  const arts = window.__site_articles || JSON.parse(localStorage.getItem('xn_articles')||'[]');
   const a = arts.find(x=>x.id===id);
   if(!a || !a.pdf || !a.pdf.data) return;
   const b64 = a.pdf.data.split(',')[1];
@@ -975,7 +989,7 @@ function openArticlePdf(id){
 
 // ── 文章站內閱讀 ──
 function openArticleText(id){
-  const arts = JSON.parse(localStorage.getItem('xn_articles')||'[]');
+  const arts = window.__site_articles || JSON.parse(localStorage.getItem('xn_articles')||'[]');
   const a = arts.find(x=>x.id===id);
   if(!a) return;
   const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');

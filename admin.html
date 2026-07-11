@@ -112,6 +112,9 @@ a{text-decoration:none;color:inherit}
 #pdf-file{color:#94a3b8;font-size:.8rem}
 #pdf-file::file-selector-button{background:#334155;color:#e2e8f0;border:none;padding:7px 14px;border-radius:8px;cursor:pointer;margin-right:10px;font-family:inherit;font-size:.78rem}
 #pdf-file::file-selector-button:hover{background:#3e4f68}
+.btn-publish{width:100%;background:linear-gradient(135deg,#C4951A,#a87d10);color:#fff;border:none;padding:11px;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;margin-bottom:10px;font-family:inherit;transition:filter .2s;letter-spacing:.05em}
+.btn-publish:hover{filter:brightness(1.12)}
+.btn-publish:disabled{opacity:.55;cursor:wait}
 </style>
 </head>
 <body>
@@ -158,6 +161,7 @@ a{text-decoration:none;color:inherit}
       </div>
     </nav>
     <div class="sb-footer">
+      <button class="btn-publish" onclick="publishSite(this)">🚀 發布到網站</button>
       <a class="sb-link" href="index.html" target="_blank">
         <span>🔗</span> 前台預覽
       </a>
@@ -253,6 +257,56 @@ const DB = {
 if (localStorage.getItem(KEYS.news) === null) localStorage.setItem(KEYS.news, JSON.stringify(SEED_NEWS));
 if (localStorage.getItem(KEYS.videos) === null) localStorage.setItem(KEYS.videos, JSON.stringify(SEED_VIDEOS));
 if (localStorage.getItem(KEYS.articles) === null) localStorage.setItem(KEYS.articles, JSON.stringify(SEED_ARTICLES));
+
+// ── 發布到網站（將內容推送到 GitHub 的 data.json，全站訪客都能看到）──
+const GH_OWNER = 'GibsonFu';
+const GH_REPO  = 'nazareth';
+const GH_PATH  = 'data.json';
+
+async function publishSite(btn){
+  let tok = localStorage.getItem('xn_gh_token');
+  if(!tok){
+    tok = prompt('第一次發布需要 GitHub Token（只會儲存在此瀏覽器）：\n\n1. 到 github.com → Settings → Developer settings → Personal access tokens → Fine-grained tokens\n2. 建立 Token：Repository 選 nazareth，權限 Contents 設為 Read and write\n3. 貼到下方');
+    if(!tok || !tok.trim()) return;
+    tok = tok.trim();
+    localStorage.setItem('xn_gh_token', tok);
+  }
+  const api = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`;
+  const hdr = { 'Authorization': 'Bearer ' + tok, 'Accept': 'application/vnd.github+json' };
+  if(btn){ btn.disabled = true; btn.textContent = '⏳ 發布中…'; }
+  try {
+    const payload = {
+      news: DB.get('news'),
+      articles: DB.get('articles'),
+      videos: DB.get('videos'),
+      publishedAt: new Date().toISOString()
+    };
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 1))));
+    let sha = null;
+    const probe = await fetch(api, { headers: hdr });
+    if(probe.status === 200){ sha = (await probe.json()).sha; }
+    else if(probe.status === 401 || probe.status === 403){
+      localStorage.removeItem('xn_gh_token');
+      toast('Token 無效或已過期，請重新發布並輸入新 Token', 'error');
+      return;
+    }
+    const body = { message: '後台發布：更新網站內容', content };
+    if(sha) body.sha = sha;
+    const r = await fetch(api, { method:'PUT', headers: hdr, body: JSON.stringify(body) });
+    if(r.ok){
+      toast('✅ 已發布！約 1～2 分鐘後全站訪客都會看到新內容', 'success');
+    } else if(r.status === 401 || r.status === 403){
+      localStorage.removeItem('xn_gh_token');
+      toast('Token 無效或權限不足，請重新發布並輸入新 Token', 'error');
+    } else {
+      toast('發布失敗（HTTP ' + r.status + '），請稍後再試', 'error');
+    }
+  } catch(err){
+    toast('發布失敗：網路錯誤', 'error');
+  } finally {
+    if(btn){ btn.disabled = false; btn.textContent = '🚀 發布到網站'; }
+  }
+}
 
 // ── TAB STATE ──
 let curTab = 'news';
