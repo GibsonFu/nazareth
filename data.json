@@ -177,12 +177,14 @@
    "wed": [
     "li"
    ],
-   "thu": [],
+   "thu": [
+    "chenyi"
+   ],
    "fri": [
     "lin"
    ],
    "sat": []
   }
  },
- "publishedAt": "2026-07-13T03:37:03.216Z"
+ "publishedAt": "2026-07-13T03:37:32.589Z"
 }
