@@ -115,6 +115,15 @@ a{text-decoration:none;color:inherit}
 .btn-publish{width:100%;background:linear-gradient(135deg,#C4951A,#a87d10);color:#fff;border:none;padding:11px;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;margin-bottom:10px;font-family:inherit;transition:filter .2s;letter-spacing:.05em}
 .btn-publish:hover{filter:brightness(1.12)}
 .btn-publish:disabled{opacity:.55;cursor:wait}
+.sched-edit{width:100%;border-collapse:collapse;font-size:.8rem;min-width:760px}
+.sched-edit th{background:#1e3a5f;color:#cbd5e1;padding:9px 6px;border:1px solid #334155;font-size:.8rem;letter-spacing:.04em}
+.sched-edit td{border:1px solid #334155;padding:8px 9px;vertical-align:top;background:#1e293b}
+.sched-edit td.slot-label{background:#0f2347;color:#93c5fd;font-weight:700;text-align:center;vertical-align:middle;white-space:nowrap;font-size:.85rem}
+.sched-doc{display:flex;align-items:center;gap:7px;padding:3px 2px;cursor:pointer;font-size:.78rem;border-radius:5px;transition:background .15s}
+.sched-doc:hover{background:#273449}
+.sched-doc input{accent-color:#3b82f6;width:14px;height:14px;cursor:pointer;flex-shrink:0}
+.sched-off{margin-top:5px;font-size:.68rem;color:#64748b;text-align:center;background:#0f172a;border-radius:6px;padding:2px 0;letter-spacing:.2em}
+.sched-actions{display:flex;gap:10px;margin-top:18px;justify-content:flex-end}
 </style>
 </head>
 <body>
@@ -158,6 +167,9 @@ a{text-decoration:none;color:inherit}
       </div>
       <div class="nav-item" data-tab="videos" onclick="switchTab('videos',this)">
         <span class="icon">🎥</span> 影片連結
+      </div>
+      <div class="nav-item" data-tab="schedule" onclick="switchTab('schedule',this)">
+        <span class="icon">📅</span> 門診表
       </div>
     </nav>
     <div class="sb-footer">
@@ -225,7 +237,7 @@ const ADMIN_USER = 'admin';
 const ADMIN_PASS = '22161606';
 
 // ── STORAGE ──
-const KEYS = { news:'xn_news', articles:'xn_articles', videos:'xn_videos', session:'xn_session' };
+const KEYS = { news:'xn_news', articles:'xn_articles', videos:'xn_videos', schedule:'xn_schedule', session:'xn_session' };
 // ── 預設公告（首次使用時自動載入）──
 const SEED_NEWS = [
   {"id":"n_seed_1","title":"115.7.10（六）颱風停診公告","date":"2026-07-10","content":"因巴威颱風來襲，本診所 115.7.10（六）全日休診。\n欣寧身心診所 助您 並 祝您 身心健康。","published":true},
@@ -341,6 +353,7 @@ async function publishSite(btn){
       news: DB.get('news'),
       articles: DB.get('articles'),
       videos: DB.get('videos'),
+      schedule: getSchedule(),
       publishedAt: new Date().toISOString()
     };
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 1))));
@@ -376,10 +389,90 @@ async function publishSite(btn){
 let curTab = 'news';
 let editId = null;
 
+// ── 門診表 ──
+const SCHED_DOCTORS = [
+  { id:'lin',    name:'林立寧', color:'#7db4f5' },
+  { id:'chenyi', name:'陳毅',   color:'#6ee7a0' },
+  { id:'li',     name:'李晨曦', color:'#c9a2f7' },
+  { id:'chen',   name:'李宸',   color:'#f5d06b' }
+];
+const SCHED_DAYS  = [['mon','MON 一'],['tue','TUE 二'],['wed','WED 三'],['thu','THU 四'],['fri','FRI 五'],['sat','SAT 六']];
+const SCHED_SLOTS = [['am','09~12'],['pm','14~17'],['eve','18~21']];
+const DEFAULT_SCHEDULE = {
+  am:  { mon:[], tue:['chen'], wed:[], thu:['lin'], fri:[], sat:['lin'] },
+  pm:  { mon:['lin'], tue:['chen'], wed:['li'], thu:['lin'], fri:['lin'], sat:[] },
+  eve: { mon:['lin'], tue:[], wed:['li'], thu:[], fri:['lin'], sat:[] }
+};
+
+function getSchedule(){
+  try {
+    const s = JSON.parse(localStorage.getItem(KEYS.schedule));
+    if(s && s.am && s.pm && s.eve) return s;
+  } catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_SCHEDULE));
+}
+
+function renderScheduleEditor(){
+  const list = document.getElementById('items-list');
+  const cur = getSchedule();
+  let html = '<p style="color:#94a3b8;font-size:.85rem;margin-bottom:14px">勾選每個時段的看診醫師；全部不勾即為 <b style="color:#e2e8f0">休診</b>。修改後記得按「儲存門診表」，再按左下角「🚀 發布到網站」。</p>';
+  html += '<div style="overflow-x:auto"><table class="sched-edit"><thead><tr><th style="width:70px">時段</th>';
+  SCHED_DAYS.forEach(d => { html += '<th>' + d[1] + '</th>'; });
+  html += '</tr></thead><tbody>';
+  SCHED_SLOTS.forEach(sl => {
+    const sk = sl[0];
+    html += '<tr><td class="slot-label">' + sl[1] + '</td>';
+    SCHED_DAYS.forEach(dy => {
+      const dk = dy[0];
+      const picked = (cur[sk] && cur[sk][dk]) || [];
+      html += '<td data-cell="' + sk + '_' + dk + '">';
+      SCHED_DOCTORS.forEach(doc => {
+        const chk = picked.indexOf(doc.id) >= 0 ? ' checked' : '';
+        html += '<label class="sched-doc"><input type="checkbox" data-slot="' + sk + '" data-day="' + dk + '" value="' + doc.id + '"' + chk + ' onchange="schedCellChanged(this)"><span style="color:' + doc.color + '">' + doc.name + '</span></label>';
+      });
+      html += '<div class="sched-off"' + (picked.length ? ' style="display:none"' : '') + '>休診</div>';
+      html += '</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+  html += '<div class="sched-actions">'
+        + '<button class="btn-cancel" onclick="resetSchedule()">還原預設班表</button>'
+        + '<button class="btn-save" onclick="saveSchedule()">💾 儲存門診表</button>'
+        + '</div>';
+  list.innerHTML = html;
+}
+
+function schedCellChanged(cb){
+  const td = cb.closest('td');
+  const any = td.querySelectorAll('input:checked').length > 0;
+  const off = td.querySelector('.sched-off');
+  if(off) off.style.display = any ? 'none' : 'block';
+}
+
+function saveSchedule(){
+  const obj = { am:{}, pm:{}, eve:{} };
+  SCHED_SLOTS.forEach(sl => SCHED_DAYS.forEach(dy => { obj[sl[0]][dy[0]] = []; }));
+  document.querySelectorAll('.sched-edit input[type=checkbox]:checked').forEach(cb => {
+    obj[cb.dataset.slot][cb.dataset.day].push(cb.value);
+  });
+  DB.set('schedule', obj);
+  toast('門診表已儲存（尚未發布）', 'success');
+}
+
+function resetSchedule(){
+  localStorage.setItem(KEYS.schedule, JSON.stringify(DEFAULT_SCHEDULE));
+  localStorage.setItem('xn_dirty', '1');
+  updateDirtyBanner();
+  renderScheduleEditor();
+  toast('已還原為預設班表', 'success');
+}
+
 const TAB_META = {
   news:     { label:'最新消息', icon:'📰', emptyTxt:'尚無任何消息' },
   articles: { label:'衛教文章', icon:'📝', emptyTxt:'尚無任何文章' },
-  videos:   { label:'影片連結', icon:'🎥', emptyTxt:'尚無任何影片' }
+  videos:   { label:'影片連結', icon:'🎥', emptyTxt:'尚無任何影片' },
+  schedule: { label:'門診表',   icon:'📅', emptyTxt:'' }
 };
 
 // ── INIT ──
@@ -431,6 +524,14 @@ function switchTab(tab, el){
 
 // ── RENDER ──
 function renderList(){
+  const toolbar = document.querySelector('.toolbar');
+  if(curTab === 'schedule'){
+    if(toolbar) toolbar.style.display = 'none';
+    renderScheduleEditor();
+    ensureDirtyBanner();
+    return;
+  }
+  if(toolbar) toolbar.style.display = 'flex';
   const items = DB.get(curTab);
   const meta = TAB_META[curTab];
   const count = document.getElementById('count-label');

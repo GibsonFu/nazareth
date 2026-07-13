@@ -80,7 +80,8 @@ nav{position:sticky;top:0;z-index:100;background:#1B3A6B;box-shadow:0 2px 8px rg
 .doc-chip{display:inline-block;border-radius:20px;padding:3px 9px;font-size:.78rem;font-weight:600;white-space:nowrap}
 .doc-chip.lin{background:#E3EDF8;color:#1B3A6B}
 .doc-chip.li{background:#EDE3F5;color:#6B2B9A}
-.doc-chip.chen{background:#FFF0D0;color:#7A4B00;font-size:.72rem}
+.doc-chip.chen{background:#FFF0D0;color:#7A4B00}
+.doc-chip.chenyi{background:#E1F3E8;color:#166534}
 .doc-chip.chen .new-tag{font-size:.62rem;color:#B8850A;margin-left:2px}
 .sched-empty{color:#ccc;font-size:.8rem}
 .sched-legend{display:flex;gap:16px;justify-content:center;margin-top:16px;flex-wrap:wrap}
@@ -89,6 +90,7 @@ nav{position:sticky;top:0;z-index:100;background:#1B3A6B;box-shadow:0 2px 8px rg
 .legend-dot.lin{background:#2B5F9A}
 .legend-dot.li{background:#8B3DB8}
 .legend-dot.chen{background:#B8850A}
+.legend-dot.chenyi{background:#2F855A}
 .sched-notes{background:#fff;border-radius:12px;padding:24px;box-shadow:0 2px 16px rgba(0,0,0,.07)}
 .sched-notes h4{color:#1B3A6B;font-size:1rem;margin-bottom:14px;border-bottom:2px solid #C4951A;padding-bottom:6px}
 .sched-notes ul{list-style:none;padding:0}
@@ -871,6 +873,47 @@ footer{padding:22px 24px 12px;text-align:left}
   function siteList(key, localList){
     return (SITE && Array.isArray(SITE[key])) ? SITE[key] : localList;
   }
+
+  // ── 門診表（動態）──
+  (function renderSchedule(){
+    let sched = null;
+    if(SITE && SITE.schedule && SITE.schedule.am) sched = SITE.schedule;
+    else { try { const s = JSON.parse(localStorage.getItem('xn_schedule')); if(s && s.am) sched = s; } catch(e){} }
+    if(!sched) return;   // 沒有資料 → 保留內建靜態表
+    const DOCS = [
+      ['lin','林立寧','lin',' 院長'],
+      ['chenyi','陳毅','chenyi',' 醫師'],
+      ['li','李晨曦','li',' 醫師'],
+      ['chen','李宸','chen',' 醫師']
+    ];
+    const byId = {};
+    DOCS.forEach(d => byId[d[0]] = d);
+    const days = ['mon','tue','wed','thu','fri','sat'];
+    const slots = [['am','09~12'],['pm','14~17'],['eve','18~21']];
+    const tb = document.querySelector('.sched-table tbody');
+    if(tb){
+      tb.innerHTML = slots.map(function(sl){
+        return '<tr><td class="time-label">' + sl[1] + '</td>' + days.map(function(d){
+          const ids = (sched[sl[0]] && sched[sl[0]][d]) || [];
+          const chips = ids.map(function(id){
+            const doc = byId[id];
+            return doc ? '<span class="doc-chip ' + doc[2] + '">' + doc[1] + '</span>' : '';
+          }).join('');
+          if(!ids.length) return '<td><span class="sched-empty">—</span></td>';
+          if(ids.length > 1) return '<td><div class="sched-cell">' + chips + '</div></td>';
+          return '<td>' + chips + '</td>';
+        }).join('') + '</tr>';
+      }).join('');
+    }
+    const legend = document.querySelector('.sched-legend');
+    if(legend){
+      const used = {};
+      slots.forEach(function(sl){ days.forEach(function(d){ ((sched[sl[0]] && sched[sl[0]][d]) || []).forEach(function(id){ used[id] = 1; }); }); });
+      legend.innerHTML = DOCS.filter(function(doc){ return used[doc[0]]; }).map(function(doc){
+        return '<span class="legend-item"><span class="legend-dot ' + doc[2] + '"></span>' + doc[1] + doc[3] + '</span>';
+      }).join('');
+    }
+  })();
   function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
   function fmtDate(d){
     if(!d) return '';
