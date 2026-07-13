@@ -136,5 +136,53 @@
    "published": true
   }
  ],
- "publishedAt": "2026-07-13T03:00:13.877Z"
+ "schedule": {
+  "am": {
+   "mon": [],
+   "tue": [
+    "chen"
+   ],
+   "wed": [],
+   "thu": [
+    "lin"
+   ],
+   "fri": [],
+   "sat": [
+    "lin"
+   ]
+  },
+  "pm": {
+   "mon": [
+    "lin"
+   ],
+   "tue": [
+    "chen"
+   ],
+   "wed": [
+    "li"
+   ],
+   "thu": [
+    "lin"
+   ],
+   "fri": [
+    "lin"
+   ],
+   "sat": []
+  },
+  "eve": {
+   "mon": [
+    "lin"
+   ],
+   "tue": [],
+   "wed": [
+    "li"
+   ],
+   "thu": [],
+   "fri": [
+    "lin"
+   ],
+   "sat": []
+  }
+ },
+ "publishedAt": "2026-07-13T03:37:03.216Z"
 }
