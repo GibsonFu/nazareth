@@ -280,6 +280,46 @@ function updateDirtyBanner(){
   if(b) b.style.display = localStorage.getItem('xn_dirty') === '1' ? 'flex' : 'none';
 }
 
+// ── 最新消息圖片 ──
+let pendingImg = null;   // {data(base64 jpeg dataURL)} | null
+
+function handleNewsImg(input){
+  const f = input.files && input.files[0];
+  if(!f) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    const im = new Image();
+    im.onload = () => {
+      const MAX = 1200;
+      let w = im.width, h = im.height;
+      if(w > MAX){ h = Math.round(h * MAX / w); w = MAX; }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(im, 0, 0, w, h);
+      pendingImg = { data: c.toDataURL('image/jpeg', 0.82) };
+      renderImgStatus();
+    };
+    im.onerror = () => toast('圖片讀取失敗', 'error');
+    im.src = rd.result;
+  };
+  rd.readAsDataURL(f);
+}
+
+function removeNewsImg(){
+  pendingImg = null;
+  const fi = document.getElementById('news-img');
+  if(fi) fi.value = '';
+  renderImgStatus();
+}
+
+function renderImgStatus(){
+  const box = document.getElementById('img-status');
+  if(!box) return;
+  box.innerHTML = (pendingImg && pendingImg.data)
+    ? '<img src="' + pendingImg.data + '" style="max-height:80px;border-radius:8px;border:1px solid #334155"><button type="button" class="btn-icon del" style="padding:3px 10px;font-size:.72rem" onclick="removeNewsImg()">移除</button>'
+    : '<span style="color:#64748b;font-size:.76rem">尚未選擇圖片</span>';
+}
+
 // ── 發布到網站（將內容推送到 GitHub 的 data.json，全站訪客都能看到）──
 const GH_OWNER = 'GibsonFu';
 const GH_REPO  = 'nazareth';
@@ -410,6 +450,7 @@ function initBannerOnce(){ ensureDirtyBanner(); }
 function renderCard(item){
   const pub = item.published;
   let meta2 = `<span>${formatDate(item.date)}</span>`;
+  if(curTab==='news' && item.img && item.img.data) meta2 += `<span class="item-tag">🖼️ 含圖片</span>`;
   if(curTab==='articles' && item.category) meta2 += `<span class="item-tag">${item.category}</span>`;
   if(curTab==='articles' && item.author)   meta2 += `<span>${item.author}</span>`;
   if(curTab==='articles' && item.url)      meta2 += `<a class="chip-link" href="${esc(item.url)}" target="_blank" rel="noopener">🔗 開啟網址</a>`;
@@ -484,6 +525,10 @@ function getFields(){
   if(curTab==='news') return `
     <div class="field"><label>標題 *</label><input name="title" required placeholder="公告標題"></div>
     <div class="field"><label>內容</label><textarea name="content" placeholder="公告內容（支援換行）"></textarea></div>
+    <div class="field"><label>圖片（選填，會自動壓縮）</label>
+      <input type="file" id="news-img" accept="image/*" onchange="handleNewsImg(this)">
+      <div id="img-status" class="pdf-status"></div>
+    </div>
     <div class="field row">
       <div><label>發布日期</label><input type="date" name="date"></div>
     </div>
@@ -522,6 +567,7 @@ function getFields(){
 function openAdd(){
   editId = null;
   pendingPdf = null;
+  pendingImg = null;
   const meta = TAB_META[curTab];
   document.getElementById('modal-title').textContent = '新增' + meta.label;
   document.getElementById('modal-fields').innerHTML = getFields();
@@ -529,6 +575,7 @@ function openAdd(){
   const dateInp = document.querySelector('#modal-fields input[name=date]');
   if(dateInp) dateInp.value = todayStr();
   renderPdfStatus();
+  renderImgStatus();
   showModal();
 }
 
@@ -549,7 +596,9 @@ function openEdit(id){
     else el.value = item[k] || '';
   });
   pendingPdf = (item.pdf && item.pdf.data) ? item.pdf : null;
+  pendingImg = (item.img && item.img.data) ? item.img : null;
   renderPdfStatus();
+  renderImgStatus();
   showModal();
 }
 
@@ -565,6 +614,7 @@ function saveItem(e){
   });
 
   if(curTab === 'articles') data.pdf = pendingPdf;
+  if(curTab === 'news') data.img = pendingImg;
 
   const items = DB.get(curTab);
   if(editId){

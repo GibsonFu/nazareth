@@ -344,6 +344,10 @@ footer{padding:22px 24px 12px;text-align:left}
 .reader-content{font-size:.98rem;color:#444;line-height:2;letter-spacing:.02em}
 .reader-author{margin-top:26px;color:#4A7C6F;font-weight:700;font-size:.9rem;text-align:right}
 @media(max-width:600px){.reader-box{padding:34px 22px 26px;max-height:90vh}}
+/* ═══ 消息圖片與燈箱 ═══ */
+.news-img{display:block;margin-top:12px;max-width:100%;max-height:240px;border-radius:12px;cursor:zoom-in;box-shadow:0 4px 14px rgba(27,58,107,.12)}
+.img-lightbox{position:fixed;inset:0;background:rgba(10,18,35,.87);z-index:1300;display:flex;align-items:center;justify-content:center;padding:28px;cursor:zoom-out}
+.img-lightbox img{max-width:95%;max-height:92vh;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
 </style>
 </head>
 <body>
@@ -902,6 +906,7 @@ footer{padding:22px 24px 12px;text-align:left}
         <div class="news-body">
           <h3>${esc(n.title)}${idx===0?'<span class="new-badge">NEW</span>':''}</h3>
           <p>${esc(n.content).replace(/\n/g,'<br>')}</p>
+          ${(n.img&&n.img.data)?'<img class="news-img" src="'+n.img.data+'" alt="'+esc(n.title)+'" loading="lazy" onclick="openImgLightbox(this.src)">':''}
         </div>
       </article>`;
     }).join('');
@@ -1007,6 +1012,21 @@ function closeArticleReader(){
   document.body.style.overflow = '';
 }
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeArticleReader(); });
+
+// ── 圖片燈箱 ──
+function openImgLightbox(src){
+  let lb = document.getElementById('img-lightbox');
+  if(!lb){
+    lb = document.createElement('div');
+    lb.id = 'img-lightbox';
+    lb.className = 'img-lightbox';
+    lb.onclick = function(){ lb.style.display = 'none'; };
+    lb.innerHTML = '<img alt="">';
+    document.body.appendChild(lb);
+  }
+  lb.querySelector('img').src = src;
+  lb.style.display = 'flex';
+}
 </script>
 
 <a class="fb-float" href="https://www.facebook.com/groups/254012400843699" target="_blank" rel="noopener" aria-label="加入欣寧身心診所 Facebook 社團">
