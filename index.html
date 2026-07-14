@@ -350,6 +350,10 @@ footer{padding:22px 24px 12px;text-align:left}
 .news-img{display:block;margin-top:12px;max-width:100%;max-height:240px;border-radius:12px;cursor:zoom-in;box-shadow:0 4px 14px rgba(27,58,107,.12)}
 .img-lightbox{position:fixed;inset:0;background:rgba(10,18,35,.87);z-index:1300;display:flex;align-items:center;justify-content:center;padding:28px;cursor:zoom-out}
 .img-lightbox img{max-width:95%;max-height:92vh;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+/* ═══ 消息顯示更多 ═══ */
+.news-hidden{display:none}
+.news-more{display:block;width:100%;margin-top:4px;background:none;border:1.5px dashed #C4951A;color:#B8850A;padding:12px;border-radius:14px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.08em;transition:background .25s}
+.news-more:hover{background:rgba(196,149,26,.08)}
 </style>
 </head>
 <body>
@@ -941,10 +945,11 @@ footer{padding:22px 24px 12px;text-align:left}
   const news = siteList('news', newsAll).filter(i=>i.published);
   const ng = document.getElementById('news-grid');
   if(ng && news.length){
+    const NEWS_LIMIT = 3;
     ng.innerHTML = news.map((n,idx)=>{
       const [y,m,d] = (n.date||'').split('-');
       return `
-      <article class="news-item${idx===0?' featured':''}">
+      <article class="news-item${idx===0?' featured':''}${idx>=NEWS_LIMIT?' news-hidden':''}">
         <div class="news-date"><span class="d">${d||'--'}</span><span class="ym">${y||''}.${m||''}</span></div>
         <div class="news-body">
           <h3>${esc(n.title)}${idx===0?'<span class="new-badge">NEW</span>':''}</h3>
@@ -953,6 +958,9 @@ footer{padding:22px 24px 12px;text-align:left}
         </div>
       </article>`;
     }).join('');
+    if(news.length > NEWS_LIMIT){
+      ng.innerHTML += '<button class="news-more" onclick="toggleMoreNews(this)">顯示更多（還有 ' + (news.length - NEWS_LIMIT) + ' 則）▾</button>';
+    }
   }
 
   // ── 衛教文章 ──
@@ -1055,6 +1063,15 @@ function closeArticleReader(){
   document.body.style.overflow = '';
 }
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeArticleReader(); });
+
+// ── 最新消息顯示更多 ──
+function toggleMoreNews(btn){
+  const hidden = document.querySelectorAll('#news-grid .news-hidden');
+  const expanded = btn.dataset.open === '1';
+  hidden.forEach(function(el){ el.style.display = expanded ? 'none' : 'flex'; });
+  btn.dataset.open = expanded ? '' : '1';
+  btn.innerHTML = expanded ? ('顯示更多（還有 ' + hidden.length + ' 則）▾') : '收合 ▴';
+}
 
 // ── 圖片燈箱 ──
 function openImgLightbox(src){
