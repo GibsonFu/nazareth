@@ -56,6 +56,12 @@ a{text-decoration:none;color:inherit}
 .item-card{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:14px 18px;transition:border-color .2s}
 .item-card:hover{border-color:#3b82f6}
 .item-row1{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.item-order{display:flex;flex-direction:column;gap:1px;flex-shrink:0}
+.btn-order{background:#0f172a;border:1px solid #334155;color:#94a3b8;width:22px;height:17px;font-size:.6rem;line-height:1;cursor:pointer;transition:all .15s;padding:0;display:flex;align-items:center;justify-content:center}
+.btn-order:first-child{border-radius:5px 5px 0 0}
+.btn-order:last-child{border-radius:0 0 5px 5px;border-top:none}
+.btn-order:hover:not(:disabled){background:#1e3a5f;border-color:#3b82f6;color:#60a5fa}
+.btn-order:disabled{opacity:.25;cursor:default}
 .item-status{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .item-status.published{background:#22c55e}
 .item-status.draft{background:#64748b}
@@ -543,12 +549,12 @@ function renderList(){
     return;
   }
 
-  list.innerHTML = items.map(item => renderCard(item)).join('');
+  list.innerHTML = items.map((item,idx) => renderCard(item, idx, items.length)).join('');
   ensureDirtyBanner();
 }
 
 function initBannerOnce(){ ensureDirtyBanner(); }
-function renderCard(item){
+function renderCard(item, idx, total){
   const pub = item.published;
   let meta2 = `<span>${formatDate(item.date)}</span>`;
   if(curTab==='news' && item.img && item.img.data) meta2 += `<span class="item-tag">🖼️ 含圖片</span>`;
@@ -558,8 +564,14 @@ function renderCard(item){
   if(curTab==='articles' && item.pdf && item.pdf.data) meta2 += `<span class="chip-link" onclick="openPdf('${item.id}')">📄 開啟 PDF</span>`;
   if(curTab==='videos' && item.url)        meta2 += `<span style="color:#3b82f6">${truncate(item.url,40)}</span>`;
 
+  const upDisabled = idx === 0 ? ' disabled' : '';
+  const downDisabled = idx === total - 1 ? ' disabled' : '';
   return `<div class="item-card">
     <div class="item-row1">
+      <div class="item-order">
+        <button class="btn-order" onclick="moveItem('${item.id}',-1)"${upDisabled} title="上移">▲</button>
+        <button class="btn-order" onclick="moveItem('${item.id}',1)"${downDisabled} title="下移">▼</button>
+      </div>
       <div class="item-status ${pub?'published':'draft'}"></div>
       <div class="item-title">${esc(item.title||'（無標題）')}</div>
     </div>
@@ -748,6 +760,17 @@ function closeModal(){
 }
 
 // ── TOGGLE PUBLISH ──
+function moveItem(id, dir){
+  const items = DB.get(curTab);
+  const i = items.findIndex(x=>x.id===id);
+  if(i < 0) return;
+  const j = i + dir;
+  if(j < 0 || j >= items.length) return;
+  [items[i], items[j]] = [items[j], items[i]];
+  DB.set(curTab, items);
+  renderList();
+}
+
 function togglePublish(id){
   const items = DB.get(curTab);
   const item = items.find(i=>i.id===id);
