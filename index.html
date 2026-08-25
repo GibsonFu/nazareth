@@ -121,6 +121,9 @@ nav{position:sticky;top:0;z-index:100;background:#1B3A6B;box-shadow:0 2px 8px rg
 .route-card{background:#fff;border-radius:10px;padding:16px 18px;box-shadow:0 2px 10px rgba(0,0,0,.06);border-left:4px solid #2B5F75;margin-bottom:12px}
 .route-card h4{font-size:.88rem;color:#2B5F75;font-weight:700;margin-bottom:6px}
 .route-card p{font-size:.83rem;color:#555;line-height:1.6}
+.route-list{list-style:none;padding:0;margin:0}
+.route-list li{font-size:.83rem;color:#555;line-height:1.85;padding-left:16px;position:relative}
+.route-list li::before{content:'›';position:absolute;left:0;color:#2B5F75;font-weight:700}
 footer{background:#1B3A6B;color:rgba(255,255,255,.7);padding:36px 20px;text-align:center}
 footer h4{color:#fff;font-size:1.1rem;margin-bottom:8px;letter-spacing:.08em}
 footer p{font-size:.83rem;line-height:1.8}
@@ -827,7 +830,7 @@ footer{padding:22px 24px 12px;text-align:left}
         <h3>📍 診所位置與聯絡</h3>
         <div class="visit-item">
           <span class="visit-icon">🏠</span>
-          <p><strong>地址</strong><br>新北市三峽區文化路266-9號1樓<br>（三峽區公所旁側，三峽國小對面）</p>
+          <p><strong>地址</strong><br>新北市三峽區文化路266-9號1樓<br>（三峽區公所、三峽國小附近）</p>
         </div>
         <div class="visit-item">
           <span class="visit-icon">📞</span>
@@ -845,12 +848,18 @@ footer{padding:22px 24px 12px;text-align:left}
         <div class="visit-info-box">
           <h3>🚌 大眾運輸路線</h3>
           <div class="route-card">
-            <h4>路線一｜捷運 + 916 路公車</h4>
-            <p>搭乘捷運至<strong>永寧站</strong>，轉乘首都客運 <strong>916</strong> 至台北三峽站，步行約 <strong>6 分鐘</strong>。</p>
+            <h4>路線一｜公車 + 捷運三鶯線台北大學站</h4>
+            <p>搭乘捷運<strong>三鶯線</strong>至<strong>台北大學站</strong>，轉乘公車或步行前往本診所。</p>
           </div>
           <div class="route-card">
-            <h4>路線二｜263 路公車</h4>
-            <p>搭乘 <strong>263</strong> 路公車至<strong>三峽國小站</strong>或<strong>魚網廠站</strong>，步行約 <strong>1 分鐘</strong>。</p>
+            <h4>路線二｜公車路線</h4>
+            <ul class="route-list">
+              <li>從捷運永寧站：搭 <strong>916</strong>。</li>
+              <li>從板橋車站／府中：搭 <strong>910</strong> 或 <strong>702</strong>。</li>
+              <li>從捷運新埔站：搭 <strong>802</strong>。</li>
+              <li>從台北市政府：搭 <strong>939</strong>。</li>
+              <li>從大溪方向：搭桃園市公車 <strong>263</strong>。</li>
+            </ul>
           </div>
         </div>
       </div>
