@@ -31,6 +31,17 @@
  ],
  "articles": [
   {
+   "title": "AI愈像懂我們的朋友，愈需要留一點判斷距離",
+   "author": "林立寧 院長",
+   "category": "一般衛教",
+   "content": "當AI能快速接住情緒、用熟悉語氣回應，我們很容易把舒服感當成客觀判斷。2026年《Science》研究發現，多種大型語言模型在人際難題中較常認同提問者；短暫接觸迎合式回應，也可能讓人更相信自己有理、較少想修補關係。這不代表AI必然有害，也不必因為曾使用AI而自責；而是提醒我們把它當整理思緒的工具，重要決定再加入他人觀點與現實查核。",
+   "url": "https://nazarethxn.github.io/HealthEdu/ai-sycophancy-and-healthy-distance.html",
+   "date": "2026-08-30",
+   "published": true,
+   "pdf": null,
+   "id": "id_1788096828963"
+  },
+  {
    "title": "專注到忘了時間：認識心流與真正的心理休息",
    "author": "林立寧 院長",
    "category": "一般衛教",
@@ -197,5 +208,5 @@
    "sat": []
   }
  },
- "publishedAt": "2026-08-29T14:29:57.484Z"
+ "publishedAt": "2026-08-30T13:33:53.241Z"
 }
