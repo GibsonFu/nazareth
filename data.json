@@ -32,7 +32,7 @@
  "articles": [
   {
    "title": "AI愈像懂我們的朋友，愈需要留一點判斷距離",
-   "author": "林立寧 院長",
+   "author": "",
    "category": "一般衛教",
    "content": "當AI能快速接住情緒、用熟悉語氣回應，我們很容易把舒服感當成客觀判斷。2026年《Science》研究發現，多種大型語言模型在人際難題中較常認同提問者；短暫接觸迎合式回應，也可能讓人更相信自己有理、較少想修補關係。這不代表AI必然有害，也不必因為曾使用AI而自責；而是提醒我們把它當整理思緒的工具，重要決定再加入他人觀點與現實查核。",
    "url": "https://nazarethxn.github.io/HealthEdu/ai-sycophancy-and-healthy-distance.html",
@@ -43,7 +43,7 @@
   },
   {
    "title": "專注到忘了時間：認識心流與真正的心理休息",
-   "author": "林立寧 院長",
+   "author": "",
    "category": "一般衛教",
    "content": "「心流」是投入一項活動時，注意力高度集中、行動順暢，甚至暫時忽略時間的經驗。它常出現在目標清楚、難度略有挑戰且能力足以應付的情境。研究發現心流與較佳幸福感有關，但不代表它能消除焦慮，也不能取代睡眠或治療。從每天十五分鐘的小活動開始，觀察自己是否更專注、愉快且仍能自在停下來，就是溫和的練習方式。",
    "url": "https://nazarethxn.github.io/HealthEdu/flow-focus-and-rest-3.html",
@@ -54,7 +54,7 @@
   },
   {
    "title": "心理學術語不是答案：用自己的話說出真實感受",
-   "author": "林立寧 院長",
+   "author": "",
    "category": "一般衛教",
    "content": "心理學術語讓複雜經驗變得容易談論，卻也可能讓人太快把自己濃縮成「I人、E人、有創傷、被情勒」或某種心理機制。這些詞可以是理解的起點，不是對自己或他人的定論。練習描述實際事件、身體感受、情緒、想法與需要，通常更能看見變化，也更有助於溝通與尋求合適協助。",
    "url": "https://nazarethxn.github.io/HealthEdu/psychology-terms-and-real-feelings.html?fbclid=IwY2xjawTVgl5wZG9mBWV4dG4DYWVtAjEwAGJyaWQRMVJTeUU2R1lob3lnTUJXNXlzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEe9AvVzX76BkRkyxVw9c2Fi2rQECxdWWYGdZEOK6Re9V7RH956U-ErwPDb2HY_aem_v_vFawATlLobknbhE9px9Q",
@@ -65,7 +65,7 @@
   },
   {
    "title": "樂觀不是假裝沒事： 在低谷中培養心理韌性",
-   "author": "林立寧 院長",
+   "author": "",
    "category": "一般衛教",
    "content": "樂觀不是把困難想小，也不是要求自己永遠正向，而是在承認壓力與失落的同時，仍相信事情可能改變，並願意採取下一個可行步驟。這種務實的希望，有助於我們在挫折後重新調整、尋找支持，逐步培養心理韌性。",
    "url": "https://nazarethxn.github.io/HealthEdu/樂觀不是假裝沒事_心理韌性衛教.html",
@@ -208,5 +208,5 @@
    "sat": []
   }
  },
- "publishedAt": "2026-08-30T13:33:53.241Z"
+ "publishedAt": "2026-08-30T23:30:30.390Z"
 }
