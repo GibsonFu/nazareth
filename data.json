@@ -111,8 +111,7 @@
  "schedule": {
   "am": {
    "mon": [
-    "chenyi",
-    "chen"
+    "chenyi"
    ],
    "tue": [
     "chen"
@@ -159,5 +158,5 @@
    "sat": []
   }
  },
- "publishedAt": "2026-08-31T14:33:10.587Z"
+ "publishedAt": "2026-08-31T14:33:47.830Z"
 }
