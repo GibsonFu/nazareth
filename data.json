@@ -121,9 +121,7 @@
  "schedule": {
   "am": {
    "mon": [],
-   "tue": [
-    "chen"
-   ],
+   "tue": [],
    "wed": [],
    "thu": [
     "lin"
@@ -166,5 +164,5 @@
    "sat": []
   }
  },
- "publishedAt": "2026-09-11T04:58:13.619Z"
+ "publishedAt": "2026-09-11T05:04:52.966Z"
 }
