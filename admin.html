@@ -21,6 +21,7 @@ a{text-decoration:none;color:inherit}
 .form-group input:focus{outline:none;border-color:#3b82f6}
 .btn-login{width:100%;background:#1B3A6B;border:none;color:#fff;padding:13px;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:8px;transition:background .2s}
 .btn-login:hover{background:#2563eb}
+.btn-login:disabled{opacity:.6;cursor:wait}
 .login-error{color:#f87171;font-size:.82rem;margin-top:10px;text-align:center;min-height:20px}
 /* ── ADMIN LAYOUT ── */
 #page-admin{display:flex;min-height:100vh}
@@ -35,6 +36,9 @@ a{text-decoration:none;color:inherit}
 .nav-item.active{background:#1e3a5f;color:#60a5fa;border-left-color:#3b82f6;font-weight:600}
 .nav-item .icon{font-size:1rem;width:20px;text-align:center}
 .sb-footer{padding:16px 20px;border-top:1px solid #334155;display:flex;flex-direction:column;gap:8px}
+.sb-sync{display:flex;align-items:center;gap:7px;font-size:.76rem;color:#4ade80;padding:6px 0;font-weight:600}
+.sb-sync .dot{width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 0 rgba(74,222,128,.5);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 6px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
 .sb-link{display:flex;align-items:center;gap:8px;font-size:.8rem;color:#64748b;padding:6px 0;cursor:pointer;transition:color .2s}
 .sb-link:hover{color:#e2e8f0}
 .btn-logout{background:#7f1d1d;border:none;color:#fca5a5;padding:8px 12px;border-radius:6px;font-size:.8rem;cursor:pointer;transition:background .2s;width:100%;font-family:inherit}
@@ -72,6 +76,7 @@ a{text-decoration:none;color:inherit}
 .item-actions{display:flex;gap:5px;flex-shrink:0}
 .btn-icon{background:none;border:1px solid #334155;color:#94a3b8;padding:6px 12px;border-radius:6px;font-size:.78rem;cursor:pointer;transition:all .2s;font-family:inherit}
 .btn-icon:hover{border-color:#60a5fa;color:#60a5fa}
+.btn-icon:disabled{opacity:.4;cursor:wait}
 .btn-icon.del:hover{border-color:#f87171;color:#f87171}
 .btn-icon.toggle.on{border-color:#22c55e;color:#22c55e}
 .empty-state{text-align:center;padding:60px 20px;color:#475569}
@@ -94,18 +99,18 @@ a{text-decoration:none;color:inherit}
 .mform .check-row{display:flex;align-items:center;gap:10px;padding:10px 0}
 .mform .check-row input[type=checkbox]{width:18px;height:18px;accent-color:#3b82f6;cursor:pointer}
 .mform .check-row label{font-size:.9rem;color:#e2e8f0;cursor:pointer;margin:0}
+.mform .hint{font-size:.72rem;color:#64748b;margin-top:5px;display:block}
 .modal-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:24px;padding-top:20px;border-top:1px solid #334155}
 .btn-cancel{background:none;border:1px solid #334155;color:#94a3b8;padding:9px 20px;border-radius:8px;font-size:.88rem;cursor:pointer;font-family:inherit;transition:all .2s}
 .btn-cancel:hover{border-color:#64748b;color:#e2e8f0}
 .btn-save{background:#1B3A6B;border:none;color:#fff;padding:9px 24px;border-radius:8px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit;transition:background .2s}
 .btn-save:hover{background:#2563eb}
+.btn-save:disabled{opacity:.6;cursor:wait}
 /* ── TOAST ── */
 .toast{position:fixed;bottom:24px;right:24px;background:#1e293b;border:1px solid #334155;border-radius:10px;padding:12px 20px;font-size:.88rem;color:#e2e8f0;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:2000;transform:translateY(120%);transition:transform .3s;display:flex;align-items:center;gap:10px}
 .toast.show{transform:translateY(0)}
 .toast.success{border-color:#22c55e;color:#86efac}
 .toast.error{border-color:#f87171;color:#fca5a5}
-/* ── VIDEO PREVIEW ── */
-.video-thumb{width:80px;height:50px;object-fit:cover;border-radius:6px;background:#0f172a;display:flex;align-items:center;justify-content:center;color:#475569;font-size:1.4rem;flex-shrink:0}
 /* ── CONFIRM DIALOG ── */
 .confirm-box{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1100;background:#1e293b;border:1px solid #334155;border-radius:12px;padding:28px;width:320px;text-align:center}
 .confirm-box h3{color:#fff;margin-bottom:10px}
@@ -115,21 +120,23 @@ a{text-decoration:none;color:inherit}
 .chip-link:hover{background:#1e4270;color:#a8ccf8}
 .pdf-status{margin-top:8px;display:flex;align-items:center;gap:10px}
 .pdf-chip{background:#173252;color:#7db4f5;padding:4px 12px;border-radius:8px;font-size:.78rem}
-#pdf-file{color:#94a3b8;font-size:.8rem}
-#pdf-file::file-selector-button{background:#334155;color:#e2e8f0;border:none;padding:7px 14px;border-radius:8px;cursor:pointer;margin-right:10px;font-family:inherit;font-size:.78rem}
-#pdf-file::file-selector-button:hover{background:#3e4f68}
-.btn-publish{width:100%;background:linear-gradient(135deg,#C4951A,#a87d10);color:#fff;border:none;padding:11px;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;margin-bottom:10px;font-family:inherit;transition:filter .2s;letter-spacing:.05em}
-.btn-publish:hover{filter:brightness(1.12)}
-.btn-publish:disabled{opacity:.55;cursor:wait}
+#pdf-file,#news-img{color:#94a3b8;font-size:.8rem}
+#pdf-file::file-selector-button,#news-img::file-selector-button{background:#334155;color:#e2e8f0;border:none;padding:7px 14px;border-radius:8px;cursor:pointer;margin-right:10px;font-family:inherit;font-size:.78rem}
+#pdf-file::file-selector-button:hover,#news-img::file-selector-button:hover{background:#3e4f68}
 .sched-edit{width:100%;border-collapse:collapse;font-size:.8rem;min-width:760px}
 .sched-edit th{background:#1e3a5f;color:#cbd5e1;padding:9px 6px;border:1px solid #334155;font-size:.8rem;letter-spacing:.04em}
 .sched-edit td{border:1px solid #334155;padding:8px 9px;vertical-align:top;background:#1e293b}
 .sched-edit td.slot-label{background:#0f2347;color:#93c5fd;font-weight:700;text-align:center;vertical-align:middle;white-space:nowrap;font-size:.85rem}
+.sched-doc-row{margin-bottom:3px}
 .sched-doc{display:flex;align-items:center;gap:7px;padding:3px 2px;cursor:pointer;font-size:.78rem;border-radius:5px;transition:background .15s}
 .sched-doc:hover{background:#273449}
 .sched-doc input{accent-color:#3b82f6;width:14px;height:14px;cursor:pointer;flex-shrink:0}
+.sched-time-row{align-items:center;gap:2px;margin:2px 0 6px 20px}
+.sched-time-row select{background:#0f172a;border:1px solid #334155;color:#cbd5e1;font-size:.66rem;border-radius:4px;padding:2px 1px;font-family:inherit;width:38px}
+.sched-time-row .tilde{color:#64748b;font-size:.68rem;margin:0 1px}
 .sched-off{margin-top:5px;font-size:.68rem;color:#64748b;text-align:center;background:#0f172a;border-radius:6px;padding:2px 0;letter-spacing:.2em}
 .sched-actions{display:flex;gap:10px;margin-top:18px;justify-content:flex-end}
+.loading-row{text-align:center;padding:60px 20px;color:#475569;font-size:.9rem}
 </style>
 </head>
 <body>
@@ -144,14 +151,14 @@ a{text-decoration:none;color:inherit}
     </div>
     <form id="login-form" onsubmit="doLogin(event)">
       <div class="form-group">
-        <label>帳號</label>
-        <input type="text" id="inp-user" placeholder="請輸入帳號" autocomplete="username">
+        <label>Email</label>
+        <input type="email" id="inp-email" placeholder="請輸入管理員 Email" autocomplete="username">
       </div>
       <div class="form-group">
         <label>密碼</label>
         <input type="password" id="inp-pass" placeholder="請輸入密碼" autocomplete="current-password">
       </div>
-      <button type="submit" class="btn-login">登入</button>
+      <button type="submit" class="btn-login" id="login-btn">登入</button>
       <p class="login-error" id="login-err"></p>
     </form>
   </div>
@@ -179,7 +186,7 @@ a{text-decoration:none;color:inherit}
       </div>
     </nav>
     <div class="sb-footer">
-      <button class="btn-publish" onclick="publishSite(this)">🚀 發布到網站</button>
+      <div class="sb-sync"><span class="dot"></span> 即時同步中</div>
       <a class="sb-link" href="index.html" target="_blank">
         <span>🔗</span> 前台預覽
       </a>
@@ -190,7 +197,7 @@ a{text-decoration:none;color:inherit}
   <div class="main">
     <div class="top-bar">
       <h1 id="top-title">最新消息管理</h1>
-      <span class="user-info">登入：admin</span>
+      <span class="user-info" id="user-info"></span>
     </div>
     <div class="content-area">
       <div class="toolbar">
@@ -198,10 +205,7 @@ a{text-decoration:none;color:inherit}
         <button class="btn-add" onclick="openAdd()">＋ 新增</button>
       </div>
       <div class="items-list" id="items-list">
-        <div class="empty-state">
-          <div class="icon">📭</div>
-          <p>尚無任何內容，點擊「新增」開始發布。</p>
-        </div>
+        <div class="loading-row">載入中…</div>
       </div>
     </div>
   </div>
@@ -218,7 +222,7 @@ a{text-decoration:none;color:inherit}
     <div id="modal-fields"></div>
     <div class="modal-footer">
       <button type="button" class="btn-cancel" onclick="closeModal()">取消</button>
-      <button type="submit" class="btn-save">儲存發布</button>
+      <button type="submit" class="btn-save" id="save-btn">儲存發布</button>
     </div>
   </form>
 </div>
@@ -237,69 +241,66 @@ a{text-decoration:none;color:inherit}
 <!-- ── TOAST ── -->
 <div class="toast" id="toast"></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <script>
-// ── CREDENTIALS ──
-const ADMIN_USER = 'admin';
-const ADMIN_PASS = '22161606';
+// ── FIREBASE INIT ──
+const firebaseConfig = {
+  apiKey: "AIzaSyCQkcQeqx-AMRSzS_ED109l_-sQvSKaDYM",
+  authDomain: "nazareth-clinic.firebaseapp.com",
+  projectId: "nazareth-clinic",
+  storageBucket: "nazareth-clinic.firebasestorage.app",
+  messagingSenderId: "515116527407",
+  appId: "1:515116527407:web:5bb8ab6bd6a22bdf2cbbda"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-// ── STORAGE ──
-const KEYS = { news:'xn_news', articles:'xn_articles', videos:'xn_videos', schedule:'xn_schedule', session:'xn_session' };
-// ── 預設公告（首次使用時自動載入）──
-const SEED_NEWS = [
-  {"id":"n_seed_1","title":"115.7.10（六）颱風停診公告","date":"2026-07-10","content":"因巴威颱風來襲，本診所 115.7.10（六）全日休診。\n欣寧身心診所 助您 並 祝您 身心健康。","published":true},
-  {"id":"n_seed_2","title":"颱風停診原則","date":"2026-07-10","content":"若新北市政府宣布停止上班，欣寧身心診所也將同步停診。\n欣寧身心診所 助您 並 祝您 身心健康。","published":true},
-  {"id":"n_seed_3","title":"藥品供貨通知","date":"2026-07-10","content":"因廠商供貨限制，芯安藥局之「安保美喜」存量有限，不便之處敬請見諒。","published":true}
-];
-const SEED_VIDEOS = [
-  {"id":"v_seed_1","title":"【夜夜好眠】破除睡眠迷思，好眠安頓身心！","url":"https://youtu.be/g03rPxPo0_0","content":"行天宮問心書院","date":"2026-07-10","published":true},
-  {"id":"v_seed_2","title":"誰來定義「正常」?（一）了解失智症的重要性","url":"https://youtu.be/IYPoKe0HkYw","content":"行天宮精神醫學","date":"2026-07-10","published":true},
-  {"id":"v_seed_3","title":"誰來定義「正常」?（二）測量非失智與失智之間的距離","url":"https://youtu.be/hm6my2IjwBs","content":"行天宮精神醫學","date":"2026-07-10","published":true},
-  {"id":"v_seed_4","title":"誰來定義「正常」?（三）因應失智症的精神行為問題","url":"https://youtu.be/uL55aO-cSSA","content":"行天宮精神醫學","date":"2026-07-10","published":true},
-  {"id":"v_seed_5","title":"疼惜你的老囡仔─認識失智的情緒行為問題","url":"https://youtu.be/1-ey5FyDZJM","content":"行天宮精神醫學","date":"2026-07-10","published":true},
-  {"id":"v_seed_6","title":"慢性病與情緒健康","url":"https://youtu.be/vVWjf6wkqQg","content":"行天宮精神醫學","date":"2026-07-10","published":true},
-  {"id":"v_seed_7","title":"網癮老人─長者上網成癮｜林立寧醫師","url":"https://youtu.be/gRsdEE66wj0","content":"行天宮精神醫學衛生教育影片","date":"2026-07-10","published":true},
-  {"id":"v_seed_8","title":"睡眠困擾是心身疾患的原因還是結果？｜林立寧","url":"https://youtu.be/4vikyg8Tp9o","content":"精神醫學健康講座","date":"2026-07-10","published":true},
-  {"id":"v_seed_9","title":"善待自己：讓身心呼吸，使生命療癒｜林立寧","url":"https://www.youtube.com/watch?v=iqKOKy-9VzQ","content":"問心書院錄播講座","date":"2026-07-10","published":true}
-];
-const SEED_ARTICLES = [
-  {"id":"a_seed_1","title":"走過初老憂鬱：在人生轉折中重拾節奏","category":"心理健康","author":"林立寧 院長","date":"2025-10-16","url":"https://www.learningandaging.com/post/%E8%B5%B0%E9%81%8E%E5%88%9D%E8%80%81%E6%86%82%E9%AC%B1%EF%BC%9A%E5%9C%A8%E4%BA%BA%E7%94%9F%E8%BD%89%E6%8A%98%E4%B8%AD%E9%87%8D%E6%8B%BE%E7%AF%80%E5%A5%8F","content":"40至65歲的中年轉折期，往往伴隨身體機能改變、家庭角色轉換與職涯調適等課題，不少人因此經歷情緒困擾。初老憂鬱的成因涵蓋生理（內分泌與荷爾蒙變化）、心理（自我價值的質疑）與社會（職場壓力、經濟負擔、家庭角色轉換）三個層面；常見表現包括情緒低落、焦慮易怒、失眠疲勞、社交退縮與記憶力下降。因應策略有四：調整生活型態、強化心理韌性、延展社會支持，以及適時尋求專業協助。","published":true}
-];
-const DB = {
-  get(k){ return JSON.parse(localStorage.getItem(KEYS[k]) || '[]') },
-  set(k,v){
-    localStorage.setItem(KEYS[k], JSON.stringify(v));
-    localStorage.setItem('xn_dirty', '1');
-    updateDirtyBanner();
-  },
-  isLoggedIn(){ return localStorage.getItem(KEYS.session) === '1' },
-  login(){ localStorage.setItem(KEYS.session,'1') },
-  logout(){ localStorage.removeItem(KEYS.session) }
+// ── 上傳大小限制（Firestore 單一文件上限 1MiB，base64 會膨脹約 1.37 倍）──
+const IMG_MAX_BYTES = 550 * 1024;   // 壓縮後圖片原始位元組上限
+const PDF_MAX_BYTES = 650 * 1024;   // PDF 檔案原始位元組上限
+
+// ── 即時快取（由 Firestore onSnapshot 同步）──
+const cache = { news: [], articles: [], videos: [] };
+let scheduleCache = null;
+let listenersStarted = false;
+const unsub = [];
+
+const DEFAULT_SCHEDULE = {
+  am:  { mon:[], tue:['chen'], wed:[], thu:['lin'], fri:[], sat:['lin'] },
+  pm:  { mon:['lin'], tue:['chen'], wed:['li'], thu:['lin'], fri:['lin'], sat:[] },
+  eve: { mon:['lin'], tue:[], wed:['li'], thu:[], fri:['lin'], sat:[] }
 };
 
-if (localStorage.getItem(KEYS.news) === null) localStorage.setItem(KEYS.news, JSON.stringify(SEED_NEWS));
-if (localStorage.getItem(KEYS.videos) === null) localStorage.setItem(KEYS.videos, JSON.stringify(SEED_VIDEOS));
-if (localStorage.getItem(KEYS.articles) === null) localStorage.setItem(KEYS.articles, JSON.stringify(SEED_ARTICLES));
+function getSchedule(){ return scheduleCache || JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)); }
 
-// ── 未發布變更提醒橫幅 ──
-function ensureDirtyBanner(){
-  if(document.getElementById('dirty-banner')) return;
-  const main = document.querySelector('.main');
-  if(!main) return;
-  const b = document.createElement('div');
-  b.id = 'dirty-banner';
-  b.style.cssText = 'display:none;background:linear-gradient(90deg,#7c2d12,#92400e);color:#fde68a;padding:11px 24px;font-size:.86rem;display:flex;align-items:center;gap:12px;border-bottom:1px solid #b45309';
-  b.innerHTML = '⚠️ <b>有尚未發布的變更</b> — 目前只有您看得到，訪客還看不到。請按左下角「🚀 發布到網站」正式發布。<button onclick="publishFromBanner()" style="margin-left:auto;background:#C4951A;color:#fff;border:none;padding:6px 16px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:.82rem;font-weight:700;white-space:nowrap">立即發布</button>';
-  main.insertBefore(b, main.children[1] || null);
-  updateDirtyBanner();
+function startListeners(){
+  if(listenersStarted) return;
+  listenersStarted = true;
+  ['news','articles','videos'].forEach(col => {
+    const u = db.collection(col).orderBy('order').onSnapshot(snap => {
+      cache[col] = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      if(curTab === col) renderList();
+    }, err => { toast('讀取' + col + '失敗：' + err.message, 'error'); });
+    unsub.push(u);
+  });
+  const us = db.collection('schedule').doc('current').onSnapshot(snap => {
+    scheduleCache = snap.exists ? snap.data() : null;
+    if(curTab === 'schedule') renderList();
+  }, err => { toast('讀取門診表失敗：' + err.message, 'error'); });
+  unsub.push(us);
 }
-function publishFromBanner(){ publishSite(document.querySelector(".btn-publish")); }
-function updateDirtyBanner(){
-  const b = document.getElementById('dirty-banner');
-  if(b) b.style.display = localStorage.getItem('xn_dirty') === '1' ? 'flex' : 'none';
+function stopListeners(){
+  unsub.forEach(u => u());
+  unsub.length = 0;
+  listenersStarted = false;
+  cache.news = []; cache.articles = []; cache.videos = []; scheduleCache = null;
 }
 
-// ── 最新消息圖片 ──
-let pendingImg = null;   // {data(base64 jpeg dataURL)} | null
+// ── 最新消息圖片（壓縮後仍以 base64 存進文件內）──
+let pendingImg = null;
 
 function handleNewsImg(input){
   const f = input.files && input.files[0];
@@ -308,19 +309,39 @@ function handleNewsImg(input){
   rd.onload = () => {
     const im = new Image();
     im.onload = () => {
-      const MAX = 1200;
-      let w = im.width, h = im.height;
-      if(w > MAX){ h = Math.round(h * MAX / w); w = MAX; }
-      const c = document.createElement('canvas');
-      c.width = w; c.height = h;
-      c.getContext('2d').drawImage(im, 0, 0, w, h);
-      pendingImg = { data: c.toDataURL('image/jpeg', 0.82) };
-      renderImgStatus();
+      compressToLimit(im, IMG_MAX_BYTES, (dataUrl, ok) => {
+        if(!ok){ toast('圖片過於複雜，即使壓縮也超過大小上限，請換一張較簡單的圖片', 'error'); return; }
+        pendingImg = { data: dataUrl };
+        renderImgStatus();
+      });
     };
     im.onerror = () => toast('圖片讀取失敗', 'error');
     im.src = rd.result;
   };
   rd.readAsDataURL(f);
+}
+
+function compressToLimit(im, maxBytes, cb){
+  let w = im.width, h = im.height, quality = 0.82;
+  const MAXW = 1200;
+  if(w > MAXW){ h = Math.round(h * MAXW / w); w = MAXW; }
+  let attempts = 0;
+  function tryOnce(){
+    const c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    c.getContext('2d').drawImage(im, 0, 0, w, h);
+    const dataUrl = c.toDataURL('image/jpeg', quality);
+    const bytes = Math.ceil(dataUrl.length * 0.75);
+    attempts++;
+    if(bytes <= maxBytes || attempts >= 6){
+      cb(dataUrl, bytes <= maxBytes);
+      return;
+    }
+    if(quality > 0.4){ quality -= 0.15; }
+    else { w = Math.round(w * 0.8); h = Math.round(h * 0.8); quality = 0.7; }
+    tryOnce();
+  }
+  tryOnce();
 }
 
 function removeNewsImg(){
@@ -338,262 +359,14 @@ function renderImgStatus(){
     : '<span style="color:#64748b;font-size:.76rem">尚未選擇圖片</span>';
 }
 
-// ── 發布到網站（將內容推送到 GitHub 的 data.json，全站訪客都能看到）──
-const GH_OWNER = 'GibsonFu';
-const GH_REPO  = 'nazareth';
-const GH_PATH  = 'data.json';
-
-async function publishSite(btn){
-  let tok = localStorage.getItem('xn_gh_token');
-  if(!tok){
-    tok = prompt('第一次發布需要 GitHub Token（只會儲存在此瀏覽器）：\n\n1. 到 github.com → Settings → Developer settings → Personal access tokens → Fine-grained tokens\n2. 建立 Token：Repository 選 nazareth，權限 Contents 設為 Read and write\n3. 貼到下方');
-    if(!tok || !tok.trim()) return;
-    tok = tok.trim();
-    localStorage.setItem('xn_gh_token', tok);
-  }
-  const api = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`;
-  const hdr = { 'Authorization': 'Bearer ' + tok, 'Accept': 'application/vnd.github+json' };
-  if(btn){ btn.disabled = true; btn.textContent = '⏳ 發布中…'; }
-  try {
-    const payload = {
-      news: DB.get('news'),
-      articles: DB.get('articles'),
-      videos: DB.get('videos'),
-      schedule: getSchedule(),
-      publishedAt: new Date().toISOString()
-    };
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 1))));
-    let sha = null;
-    const probe = await fetch(api, { headers: hdr });
-    if(probe.status === 200){ sha = (await probe.json()).sha; }
-    else if(probe.status === 401 || probe.status === 403){
-      localStorage.removeItem('xn_gh_token');
-      toast('Token 無效或已過期，請重新發布並輸入新 Token', 'error');
-      return;
-    }
-    const body = { message: '後台發布：更新網站內容', content };
-    if(sha) body.sha = sha;
-    const r = await fetch(api, { method:'PUT', headers: hdr, body: JSON.stringify(body) });
-    if(r.ok){
-      toast('✅ 已發布！約 1～2 分鐘後全站訪客都會看到新內容', 'success');
-      localStorage.removeItem('xn_dirty');
-      updateDirtyBanner();
-    } else if(r.status === 401 || r.status === 403){
-      localStorage.removeItem('xn_gh_token');
-      toast('Token 無效或權限不足，請重新發布並輸入新 Token', 'error');
-    } else {
-      toast('發布失敗（HTTP ' + r.status + '），請稍後再試', 'error');
-    }
-  } catch(err){
-    toast('發布失敗：網路錯誤', 'error');
-  } finally {
-    if(btn){ btn.disabled = false; btn.textContent = '🚀 發布到網站'; }
-  }
-}
-
-// ── TAB STATE ──
-let curTab = 'news';
-let editId = null;
-
-// ── 門診表 ──
-const SCHED_DOCTORS = [
-  { id:'lin',    name:'林立寧', color:'#7db4f5' },
-  { id:'chenyi', name:'陳毅',   color:'#6ee7a0' },
-  { id:'li',     name:'李晨曦', color:'#c9a2f7' },
-  { id:'chen',   name:'李宸',   color:'#f5d06b' }
-];
-const SCHED_DAYS  = [['mon','MON 一'],['tue','TUE 二'],['wed','WED 三'],['thu','THU 四'],['fri','FRI 五'],['sat','SAT 六']];
-const SCHED_SLOTS = [['am','09~12'],['pm','14~17'],['eve','18~21']];
-const DEFAULT_SCHEDULE = {
-  am:  { mon:[], tue:['chen'], wed:[], thu:['lin'], fri:[], sat:['lin'] },
-  pm:  { mon:['lin'], tue:['chen'], wed:['li'], thu:['lin'], fri:['lin'], sat:[] },
-  eve: { mon:['lin'], tue:[], wed:['li'], thu:[], fri:['lin'], sat:[] }
-};
-
-function getSchedule(){
-  try {
-    const s = JSON.parse(localStorage.getItem(KEYS.schedule));
-    if(s && s.am && s.pm && s.eve) return s;
-  } catch(e){}
-  return JSON.parse(JSON.stringify(DEFAULT_SCHEDULE));
-}
-
-function renderScheduleEditor(){
-  const list = document.getElementById('items-list');
-  const cur = getSchedule();
-  let html = '<p style="color:#94a3b8;font-size:.85rem;margin-bottom:14px">勾選每個時段的看診醫師；全部不勾即為 <b style="color:#e2e8f0">休診</b>。修改後記得按「儲存門診表」，再按左下角「🚀 發布到網站」。</p>';
-  html += '<div style="overflow-x:auto"><table class="sched-edit"><thead><tr><th style="width:70px">時段</th>';
-  SCHED_DAYS.forEach(d => { html += '<th>' + d[1] + '</th>'; });
-  html += '</tr></thead><tbody>';
-  SCHED_SLOTS.forEach(sl => {
-    const sk = sl[0];
-    html += '<tr><td class="slot-label">' + sl[1] + '</td>';
-    SCHED_DAYS.forEach(dy => {
-      const dk = dy[0];
-      const picked = (cur[sk] && cur[sk][dk]) || [];
-      html += '<td data-cell="' + sk + '_' + dk + '">';
-      SCHED_DOCTORS.forEach(doc => {
-        const chk = picked.indexOf(doc.id) >= 0 ? ' checked' : '';
-        html += '<label class="sched-doc"><input type="checkbox" data-slot="' + sk + '" data-day="' + dk + '" value="' + doc.id + '"' + chk + ' onchange="schedCellChanged(this)"><span style="color:' + doc.color + '">' + doc.name + '</span></label>';
-      });
-      html += '<div class="sched-off"' + (picked.length ? ' style="display:none"' : '') + '>休診</div>';
-      html += '</td>';
-    });
-    html += '</tr>';
-  });
-  html += '</tbody></table></div>';
-  html += '<div class="sched-actions">'
-        + '<button class="btn-cancel" onclick="resetSchedule()">還原預設班表</button>'
-        + '<button class="btn-save" onclick="saveSchedule()">💾 儲存門診表</button>'
-        + '</div>';
-  list.innerHTML = html;
-}
-
-function schedCellChanged(cb){
-  const td = cb.closest('td');
-  const any = td.querySelectorAll('input:checked').length > 0;
-  const off = td.querySelector('.sched-off');
-  if(off) off.style.display = any ? 'none' : 'block';
-}
-
-function saveSchedule(){
-  const obj = { am:{}, pm:{}, eve:{} };
-  SCHED_SLOTS.forEach(sl => SCHED_DAYS.forEach(dy => { obj[sl[0]][dy[0]] = []; }));
-  document.querySelectorAll('.sched-edit input[type=checkbox]:checked').forEach(cb => {
-    obj[cb.dataset.slot][cb.dataset.day].push(cb.value);
-  });
-  DB.set('schedule', obj);
-  toast('門診表已儲存（尚未發布）', 'success');
-}
-
-function resetSchedule(){
-  localStorage.setItem(KEYS.schedule, JSON.stringify(DEFAULT_SCHEDULE));
-  localStorage.setItem('xn_dirty', '1');
-  updateDirtyBanner();
-  renderScheduleEditor();
-  toast('已還原為預設班表', 'success');
-}
-
-const TAB_META = {
-  news:     { label:'最新消息', icon:'📰', emptyTxt:'尚無任何消息' },
-  articles: { label:'衛教文章', icon:'📝', emptyTxt:'尚無任何文章' },
-  videos:   { label:'影片連結', icon:'🎥', emptyTxt:'尚無任何影片' },
-  schedule: { label:'門診表',   icon:'📅', emptyTxt:'' }
-};
-
-// ── INIT ──
-(function init(){
-  if(DB.isLoggedIn()) showAdmin();
-  else showLogin();
-})();
-
-// ── AUTH ──
-function doLogin(e){
-  e.preventDefault();
-  const u = document.getElementById('inp-user').value.trim();
-  const p = document.getElementById('inp-pass').value;
-  if(u === ADMIN_USER && p === ADMIN_PASS){
-    DB.login();
-    showAdmin();
-  } else {
-    const err = document.getElementById('login-err');
-    err.textContent = '帳號或密碼錯誤，請重試。';
-    setTimeout(()=> err.textContent='', 3000);
-  }
-}
-
-function doLogout(){
-  DB.logout();
-  location.reload();
-}
-
-function showLogin(){
-  document.getElementById('page-login').style.display='flex';
-  document.getElementById('page-admin').style.display='none';
-}
-
-function showAdmin(){
-  document.getElementById('page-login').style.display='none';
-  document.getElementById('page-admin').style.display='flex';
-  renderList();
-}
-
-// ── TAB SWITCH ──
-function switchTab(tab, el){
-  curTab = tab;
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  el.classList.add('active');
-  const meta = TAB_META[tab];
-  document.getElementById('top-title').textContent = meta.label + '管理';
-  renderList();
-}
-
-// ── RENDER ──
-function renderList(){
-  const toolbar = document.querySelector('.toolbar');
-  if(curTab === 'schedule'){
-    if(toolbar) toolbar.style.display = 'none';
-    renderScheduleEditor();
-    ensureDirtyBanner();
-    return;
-  }
-  if(toolbar) toolbar.style.display = 'flex';
-  const items = DB.get(curTab);
-  const meta = TAB_META[curTab];
-  const count = document.getElementById('count-label');
-  const list  = document.getElementById('items-list');
-  count.textContent = items.length;
-
-  if(!items.length){
-    list.innerHTML = `<div class="empty-state"><div class="icon">${meta.icon}</div><p>${meta.emptyTxt}，點擊「新增」開始發布。</p></div>`;
-    return;
-  }
-
-  list.innerHTML = items.map((item,idx) => renderCard(item, idx, items.length)).join('');
-  ensureDirtyBanner();
-}
-
-function initBannerOnce(){ ensureDirtyBanner(); }
-function renderCard(item, idx, total){
-  const pub = item.published;
-  let meta2 = `<span>${formatDate(item.date)}</span>`;
-  if(curTab==='news' && item.img && item.img.data) meta2 += `<span class="item-tag">🖼️ 含圖片</span>`;
-  if(curTab==='articles' && item.category) meta2 += `<span class="item-tag">${item.category}</span>`;
-  if(curTab==='articles' && item.author)   meta2 += `<span>${item.author}</span>`;
-  if(curTab==='articles' && item.url)      meta2 += `<a class="chip-link" href="${esc(item.url)}" target="_blank" rel="noopener">🔗 開啟網址</a>`;
-  if(curTab==='articles' && item.pdf && item.pdf.data) meta2 += `<span class="chip-link" onclick="openPdf('${item.id}')">📄 開啟 PDF</span>`;
-  if(curTab==='videos' && item.url)        meta2 += `<span style="color:#3b82f6">${truncate(item.url,40)}</span>`;
-
-  const upDisabled = idx === 0 ? ' disabled' : '';
-  const downDisabled = idx === total - 1 ? ' disabled' : '';
-  return `<div class="item-card">
-    <div class="item-row1">
-      <div class="item-order">
-        <button class="btn-order" onclick="moveItem('${item.id}',-1)"${upDisabled} title="上移">▲</button>
-        <button class="btn-order" onclick="moveItem('${item.id}',1)"${downDisabled} title="下移">▼</button>
-      </div>
-      <div class="item-status ${pub?'published':'draft'}"></div>
-      <div class="item-title">${esc(item.title||'（無標題）')}</div>
-    </div>
-    <div class="item-row2">
-      <div class="item-meta">${meta2}<span style="color:${pub?'#22c55e':'#64748b'}">${pub?'已發布':'草稿'}</span></div>
-      <div class="item-actions">
-        <button class="btn-icon toggle ${pub?'on':''}" onclick="togglePublish('${item.id}')">${pub?'取消發布':'發布'}</button>
-        <button class="btn-icon" onclick="openEdit('${item.id}')">編輯</button>
-        <button class="btn-icon del" onclick="confirmDelete('${item.id}')">刪除</button>
-      </div>
-    </div>
-  </div>`;
-}
-
 // ── PDF 附件 ──
-let pendingPdf = null;   // {name, data(base64 dataURL)} | null
+let pendingPdf = null;
 
 function handlePdf(input){
   const f = input.files && input.files[0];
   if(!f) return;
-  if(f.size > 3 * 1024 * 1024){
-    toast('PDF 檔案過大（上限 3MB）', 'error');
+  if(f.size > PDF_MAX_BYTES){
+    toast('PDF 檔案過大（上限約 ' + Math.round(PDF_MAX_BYTES/1024) + 'KB，資料庫單筆容量限制）', 'error');
     input.value = '';
     return;
   }
@@ -629,8 +402,256 @@ function pdfBlobUrl(dataUrl){
 }
 
 function openPdf(id){
-  const item = DB.get(curTab).find(i=>i.id===id);
+  const item = cache[curTab].find(i=>i.id===id);
   if(item && item.pdf && item.pdf.data) window.open(pdfBlobUrl(item.pdf.data), '_blank');
+}
+
+// ── TAB STATE ──
+let curTab = 'news';
+let editId = null;
+
+// ── 門診表 ──
+const SCHED_DOCTORS = [
+  { id:'lin',    name:'林立寧', color:'#7db4f5' },
+  { id:'chenyi', name:'陳毅',   color:'#6ee7a0' },
+  { id:'li',     name:'李晨曦', color:'#c9a2f7' },
+  { id:'chen',   name:'李宸',   color:'#f5d06b' }
+];
+const SCHED_DAYS  = [['mon','MON 一'],['tue','TUE 二'],['wed','WED 三'],['thu','THU 四'],['fri','FRI 五'],['sat','SAT 六']];
+const SCHED_SLOTS = [['am','09~12'],['pm','14~17'],['eve','18~21']];
+
+// entry 可能是舊格式的純字串 'lin'（無時間），或新格式 {id:'lin', time:'13:30-16:30'}
+function schedFindEntry(picked, docId){
+  for(const p of picked){
+    if(typeof p === 'string'){ if(p === docId) return { id: docId, time: null }; }
+    else if(p && p.id === docId){ return { id: docId, time: p.time || null }; }
+  }
+  return null;
+}
+function schedHourOpts(min, max, sel){
+  let h = '<option value="">--</option>';
+  for(let x=min; x<=max; x++){
+    const v = String(x).padStart(2,'0');
+    h += '<option value="' + v + '"' + (sel===v?' selected':'') + '>' + v + '</option>';
+  }
+  return h;
+}
+function schedMinOpts(sel){
+  return '<option value="">--</option>'
+       + '<option value="00"' + (sel==='00'?' selected':'') + '>00</option>'
+       + '<option value="30"' + (sel==='30'?' selected':'') + '>30</option>';
+}
+
+function renderScheduleEditor(){
+  const list = document.getElementById('items-list');
+  const cur = getSchedule();
+  let html = '<p style="color:#94a3b8;font-size:.85rem;margin-bottom:14px">勾選每個時段的看診醫師；全部不勾即為 <b style="color:#e2e8f0">休診</b>。勾選後可選填實際看診時間（選填，前台會顯示在姓名下方；預設不選就不顯示）。變更會即時同步到前台，不需另外發布。</p>';
+  html += '<div style="overflow-x:auto"><table class="sched-edit"><thead><tr><th style="width:70px">時段</th>';
+  SCHED_DAYS.forEach(d => { html += '<th>' + d[1] + '</th>'; });
+  html += '</tr></thead><tbody>';
+  SCHED_SLOTS.forEach(sl => {
+    const sk = sl[0];
+    html += '<tr><td class="slot-label">' + sl[1] + '</td>';
+    SCHED_DAYS.forEach(dy => {
+      const dk = dy[0];
+      const picked = (cur[sk] && cur[sk][dk]) || [];
+      html += '<td data-cell="' + sk + '_' + dk + '">';
+      SCHED_DOCTORS.forEach(doc => {
+        const entry = schedFindEntry(picked, doc.id);
+        const chk = entry ? ' checked' : '';
+        let sh='', sm='', eh='', em='';
+        if(entry && entry.time){
+          const parts = entry.time.split('-');
+          if(parts[0]){ const p0 = parts[0].split(':'); sh = p0[0]||''; sm = p0[1]||''; }
+          if(parts[1]){ const p1 = parts[1].split(':'); eh = p1[0]||''; em = p1[1]||''; }
+        }
+        html += '<div class="sched-doc-row">';
+        html += '<label class="sched-doc"><input type="checkbox" data-slot="' + sk + '" data-day="' + dk + '" value="' + doc.id + '"' + chk + ' onchange="schedCellChanged(this)"><span style="color:' + doc.color + '">' + doc.name + '</span></label>';
+        html += '<div class="sched-time-row" data-doc="' + doc.id + '" style="display:' + (entry?'flex':'none') + '">'
+              + '<select class="st-sh">' + schedHourOpts(8,18,sh) + '</select>'
+              + '<select class="st-sm">' + schedMinOpts(sm) + '</select>'
+              + '<span class="tilde">~</span>'
+              + '<select class="st-eh">' + schedHourOpts(12,21,eh) + '</select>'
+              + '<select class="st-em">' + schedMinOpts(em) + '</select>'
+              + '</div>';
+        html += '</div>';
+      });
+      html += '<div class="sched-off"' + (picked.length ? ' style="display:none"' : '') + '>休診</div>';
+      html += '</td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+  html += '<div class="sched-actions">'
+        + '<button class="btn-cancel" onclick="resetSchedule()">還原預設班表</button>'
+        + '<button class="btn-save" onclick="saveSchedule()">💾 儲存門診表</button>'
+        + '</div>';
+  list.innerHTML = html;
+}
+
+function schedCellChanged(cb){
+  const td = cb.closest('td');
+  const any = td.querySelectorAll('input:checked').length > 0;
+  const off = td.querySelector('.sched-off');
+  if(off) off.style.display = any ? 'none' : 'block';
+  const row = td.querySelector('.sched-time-row[data-doc="' + cb.value + '"]');
+  if(row){
+    row.style.display = cb.checked ? 'flex' : 'none';
+    if(!cb.checked){
+      row.querySelectorAll('select').forEach(s => { s.value = ''; });
+    }
+  }
+}
+
+async function saveSchedule(){
+  const obj = { am:{}, pm:{}, eve:{} };
+  SCHED_SLOTS.forEach(sl => SCHED_DAYS.forEach(dy => { obj[sl[0]][dy[0]] = []; }));
+  document.querySelectorAll('.sched-edit input[type=checkbox]:checked').forEach(cb => {
+    const td = cb.closest('td');
+    const row = td.querySelector('.sched-time-row[data-doc="' + cb.value + '"]');
+    let entry = cb.value;
+    if(row){
+      const sh = row.querySelector('.st-sh').value;
+      const sm = row.querySelector('.st-sm').value;
+      const eh = row.querySelector('.st-eh').value;
+      const em = row.querySelector('.st-em').value;
+      if(sh && sm !== '' && eh && em !== ''){
+        entry = { id: cb.value, time: sh + ':' + sm + '-' + eh + ':' + em };
+      }
+    }
+    obj[cb.dataset.slot][cb.dataset.day].push(entry);
+  });
+  try {
+    await db.collection('schedule').doc('current').set(obj);
+    toast('門診表已儲存並同步到前台', 'success');
+  } catch(err){
+    toast('儲存失敗：' + err.message, 'error');
+  }
+}
+
+async function resetSchedule(){
+  try {
+    await db.collection('schedule').doc('current').set(JSON.parse(JSON.stringify(DEFAULT_SCHEDULE)));
+    toast('已還原為預設班表', 'success');
+  } catch(err){
+    toast('還原失敗：' + err.message, 'error');
+  }
+}
+
+const TAB_META = {
+  news:     { label:'最新消息', icon:'📰', emptyTxt:'尚無任何消息' },
+  articles: { label:'衛教文章', icon:'📝', emptyTxt:'尚無任何文章' },
+  videos:   { label:'影片連結', icon:'🎥', emptyTxt:'尚無任何影片' },
+  schedule: { label:'門診表',   icon:'📅', emptyTxt:'' }
+};
+
+// ── AUTH ──
+auth.onAuthStateChanged(user => {
+  if(user){
+    document.getElementById('user-info').textContent = '登入：' + user.email;
+    showAdmin();
+    startListeners();
+  } else {
+    stopListeners();
+    showLogin();
+  }
+});
+
+function doLogin(e){
+  e.preventDefault();
+  const email = document.getElementById('inp-email').value.trim();
+  const pass = document.getElementById('inp-pass').value;
+  const err = document.getElementById('login-err');
+  const btn = document.getElementById('login-btn');
+  err.textContent = '';
+  if(!email || !pass){ err.textContent = '請輸入 Email 和密碼。'; return; }
+  btn.disabled = true; btn.textContent = '登入中…';
+  auth.signInWithEmailAndPassword(email, pass)
+    .catch(e2 => {
+      err.textContent = (e2.code === 'auth/invalid-credential' || e2.code === 'auth/wrong-password' || e2.code === 'auth/user-not-found')
+        ? '帳號或密碼錯誤，請重試。' : '登入失敗：' + e2.message;
+    })
+    .finally(() => { btn.disabled = false; btn.textContent = '登入'; });
+}
+
+function doLogout(){
+  auth.signOut();
+}
+
+function showLogin(){
+  document.getElementById('page-login').style.display='flex';
+  document.getElementById('page-admin').style.display='none';
+}
+
+function showAdmin(){
+  document.getElementById('page-login').style.display='none';
+  document.getElementById('page-admin').style.display='flex';
+  renderList();
+}
+
+// ── TAB SWITCH ──
+function switchTab(tab, el){
+  curTab = tab;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+  const meta = TAB_META[tab];
+  document.getElementById('top-title').textContent = meta.label + '管理';
+  renderList();
+}
+
+// ── RENDER ──
+function renderList(){
+  const toolbar = document.querySelector('.toolbar');
+  if(curTab === 'schedule'){
+    if(toolbar) toolbar.style.display = 'none';
+    renderScheduleEditor();
+    return;
+  }
+  if(toolbar) toolbar.style.display = 'flex';
+  const items = cache[curTab] || [];
+  const meta = TAB_META[curTab];
+  const count = document.getElementById('count-label');
+  const list  = document.getElementById('items-list');
+  count.textContent = items.length;
+
+  if(!items.length){
+    list.innerHTML = `<div class="empty-state"><div class="icon">${meta.icon}</div><p>${meta.emptyTxt}，點擊「新增」開始發布。</p></div>`;
+    return;
+  }
+
+  list.innerHTML = items.map((item,idx) => renderCard(item, idx, items.length)).join('');
+}
+
+function renderCard(item, idx, total){
+  const pub = item.published;
+  let meta2 = `<span>${formatDate(item.date)}</span>`;
+  if(curTab==='news' && item.img && item.img.data) meta2 += `<span class="item-tag">🖼️ 含圖片</span>`;
+  if(curTab==='articles' && item.category) meta2 += `<span class="item-tag">${item.category}</span>`;
+  if(curTab==='articles' && item.author)   meta2 += `<span>${item.author}</span>`;
+  if(curTab==='articles' && item.url)      meta2 += `<a class="chip-link" href="${esc(item.url)}" target="_blank" rel="noopener">🔗 開啟網址</a>`;
+  if(curTab==='articles' && item.pdf && item.pdf.data) meta2 += `<span class="chip-link" onclick="openPdf('${item.id}')">📄 開啟 PDF</span>`;
+  if(curTab==='videos' && item.url)        meta2 += `<span style="color:#3b82f6">${truncate(item.url,40)}</span>`;
+
+  const upDisabled = idx === 0 ? ' disabled' : '';
+  const downDisabled = idx === total - 1 ? ' disabled' : '';
+  return `<div class="item-card">
+    <div class="item-row1">
+      <div class="item-order">
+        <button class="btn-order" onclick="moveItem('${item.id}',-1)"${upDisabled} title="上移">▲</button>
+        <button class="btn-order" onclick="moveItem('${item.id}',1)"${downDisabled} title="下移">▼</button>
+      </div>
+      <div class="item-status ${pub?'published':'draft'}"></div>
+      <div class="item-title">${esc(item.title||'（無標題）')}</div>
+    </div>
+    <div class="item-row2">
+      <div class="item-meta">${meta2}<span style="color:${pub?'#22c55e':'#64748b'}">${pub?'已發布':'草稿'}</span></div>
+      <div class="item-actions">
+        <button class="btn-icon toggle ${pub?'on':''}" onclick="togglePublish('${item.id}')">${pub?'取消發布':'發布'}</button>
+        <button class="btn-icon" onclick="openEdit('${item.id}')">編輯</button>
+        <button class="btn-icon del" onclick="confirmDelete('${item.id}')">刪除</button>
+      </div>
+    </div>
+  </div>`;
 }
 
 // ── MODAL (ADD/EDIT) ──
@@ -640,6 +661,7 @@ function getFields(){
     <div class="field"><label>內容</label><textarea name="content" placeholder="公告內容（支援換行）"></textarea></div>
     <div class="field"><label>圖片（選填，會自動壓縮）</label>
       <input type="file" id="news-img" accept="image/*" onchange="handleNewsImg(this)">
+      <span class="hint">壓縮後上限約 ${Math.round(IMG_MAX_BYTES/1024)}KB（資料庫單筆容量限制）</span>
       <div id="img-status" class="pdf-status"></div>
     </div>
     <div class="field row">
@@ -662,8 +684,9 @@ function getFields(){
     </div>
     <div class="field"><label>內容</label><textarea name="content" placeholder="文章內容..." style="min-height:180px"></textarea></div>
     <div class="field"><label>文章網址（選填）</label><input name="url" placeholder="https://…　前台會顯示「閱讀全文」連結"></div>
-    <div class="field"><label>PDF 檔案（選填，上限 3MB）</label>
+    <div class="field"><label>PDF 檔案（選填）</label>
       <input type="file" id="pdf-file" accept="application/pdf" onchange="handlePdf(this)">
+      <span class="hint">上限約 ${Math.round(PDF_MAX_BYTES/1024)}KB（資料庫單筆容量限制）</span>
       <div id="pdf-status" class="pdf-status"></div>
     </div>
     <div class="field"><label>發布日期</label><input type="date" name="date" style="max-width:200px"></div>
@@ -684,7 +707,6 @@ function openAdd(){
   const meta = TAB_META[curTab];
   document.getElementById('modal-title').textContent = '新增' + meta.label;
   document.getElementById('modal-fields').innerHTML = getFields();
-  // Set default date to today
   const dateInp = document.querySelector('#modal-fields input[name=date]');
   if(dateInp) dateInp.value = todayStr();
   renderPdfStatus();
@@ -693,14 +715,13 @@ function openAdd(){
 }
 
 function openEdit(id){
-  const items = DB.get(curTab);
+  const items = cache[curTab];
   const item = items.find(i=>i.id===id);
   if(!item) return;
   editId = id;
   const meta = TAB_META[curTab];
   document.getElementById('modal-title').textContent = '編輯' + meta.label;
   document.getElementById('modal-fields').innerHTML = getFields();
-  // Populate fields
   const form = document.getElementById('modal-form');
   Object.keys(item).forEach(k=>{
     const el = form.querySelector(`[name="${k}"]`);
@@ -715,38 +736,37 @@ function openEdit(id){
   showModal();
 }
 
-function saveItem(e){
+async function saveItem(e){
   e.preventDefault();
   const form = document.getElementById('modal-form');
-  const fd = new FormData(form);
   const data = {};
-  // Get all named inputs
   form.querySelectorAll('[name]').forEach(el=>{
     if(el.type==='checkbox') data[el.name] = el.checked;
     else data[el.name] = el.value.trim();
   });
+  if(curTab === 'articles') data.pdf = pendingPdf || null;
+  if(curTab === 'news') data.img = pendingImg || null;
+  if(!data.date) data.date = todayStr();
 
-  if(curTab === 'articles') data.pdf = pendingPdf;
-  if(curTab === 'news') data.img = pendingImg;
-
-  const items = DB.get(curTab);
-  if(editId){
-    const idx = items.findIndex(i=>i.id===editId);
-    if(idx>=0) items[idx] = { ...items[idx], ...data };
-  } else {
-    data.id = 'id_' + Date.now();
-    if(!data.date) data.date = todayStr();
-    items.unshift(data);
-  }
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true; btn.textContent = '儲存中…';
   try {
-    DB.set(curTab, items);
-  } catch(err) {
-    toast('儲存失敗：空間不足，請改用較小的 PDF 或移除舊附件', 'error');
-    return;
+    if(editId){
+      await db.collection(curTab).doc(editId).set(data, { merge: true });
+    } else {
+      const items = cache[curTab];
+      const minOrder = items.length ? Math.min(...items.map(i => i.order ?? 0)) : 0;
+      data.order = minOrder - 1;
+      const newId = 'id_' + Date.now();
+      await db.collection(curTab).doc(newId).set(data);
+    }
+    closeModal();
+    toast(editId ? '已更新內容' : '已新增並發布', 'success');
+  } catch(err){
+    toast('儲存失敗：' + err.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = '儲存發布';
   }
-  closeModal();
-  renderList();
-  toast(editId ? '已更新內容' : '已新增並發布', 'success');
 }
 
 function showModal(){
@@ -759,29 +779,35 @@ function closeModal(){
   editId = null;
 }
 
-// ── TOGGLE PUBLISH ──
-function moveItem(id, dir){
-  const items = DB.get(curTab);
+// ── REORDER / TOGGLE / DELETE ──
+async function moveItem(id, dir){
+  const items = cache[curTab];
   const i = items.findIndex(x=>x.id===id);
   if(i < 0) return;
   const j = i + dir;
   if(j < 0 || j >= items.length) return;
-  [items[i], items[j]] = [items[j], items[i]];
-  DB.set(curTab, items);
-  renderList();
+  const a = items[i], b = items[j];
+  try {
+    const batch = db.batch();
+    batch.update(db.collection(curTab).doc(a.id), { order: b.order ?? 0 });
+    batch.update(db.collection(curTab).doc(b.id), { order: a.order ?? 0 });
+    await batch.commit();
+  } catch(err){
+    toast('排序失敗：' + err.message, 'error');
+  }
 }
 
-function togglePublish(id){
-  const items = DB.get(curTab);
-  const item = items.find(i=>i.id===id);
+async function togglePublish(id){
+  const item = cache[curTab].find(i=>i.id===id);
   if(!item) return;
-  item.published = !item.published;
-  DB.set(curTab, items);
-  renderList();
-  toast(item.published ? '已發布到前台' : '已取消發布', item.published?'success':'');
+  try {
+    await db.collection(curTab).doc(id).update({ published: !item.published });
+    toast(!item.published ? '已發布到前台' : '已取消發布', !item.published?'success':'');
+  } catch(err){
+    toast('操作失敗：' + err.message, 'error');
+  }
 }
 
-// ── DELETE ──
 let deleteTarget = null;
 function confirmDelete(id){
   deleteTarget = id;
@@ -794,13 +820,15 @@ function closeConfirm(){
   document.getElementById('confirm-overlay').style.display='none';
   document.getElementById('confirm-box').style.display='none';
 }
-function executeDelete(){
+async function executeDelete(){
   if(!deleteTarget) return;
-  const items = DB.get(curTab).filter(i=>i.id!==deleteTarget);
-  DB.set(curTab, items);
-  closeConfirm();
-  renderList();
-  toast('已刪除', 'error');
+  try {
+    await db.collection(curTab).doc(deleteTarget).delete();
+    closeConfirm();
+    toast('已刪除', 'error');
+  } catch(err){
+    toast('刪除失敗：' + err.message, 'error');
+  }
 }
 
 // ── TOAST ──
